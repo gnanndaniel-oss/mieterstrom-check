@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const anbieter = await prisma.anbieter.findMany({
     take: 6,
