@@ -418,7 +418,7 @@ async function main() {
       gruendungsjahr: 2023,
       planungKonzeption: true,
       finanzierung: true,
-      installationPV: false,
+      installationPV: true,
       bhkw: false,
       wallboxen: true,
       speicher: true,
