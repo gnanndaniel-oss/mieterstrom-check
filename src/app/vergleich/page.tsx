@@ -9,14 +9,23 @@ export const dynamic = 'force-dynamic';
 export default async function VergleichPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const sp = await searchParams;
     const weQuery = typeof sp.we === 'string' ? parseInt(sp.we, 10) : undefined;
+    const pvQuery = sp.pv === 'on';
+    const bhkwQuery = sp.bhkw === 'on';
+    const speicherQuery = sp.speicher === 'on';
+    const wallboxQuery = sp.wallbox === 'on';
+
+    const whereClause: any = {};
+    if (weQuery) whereClause.mindestWE = { lte: weQuery };
+    if (pvQuery) whereClause.installationPV = true;
+    if (bhkwQuery) whereClause.bhkw = true;
+    if (speicherQuery) whereClause.speicher = true;
+    if (wallboxQuery) whereClause.wallboxen = true;
 
     // Minimal filter logic
     const anbieter = await prisma.anbieter.findMany({
-        where: weQuery ? {
-            mindestWE: { lte: weQuery }
-        } : undefined,
+        where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
         orderBy: {
-            name: 'asc'
+            anzahlBewertungen: 'desc'
         }
     });
 
@@ -39,30 +48,28 @@ export default async function VergleichPage({ searchParams }: { searchParams: Pr
                         <form action="/vergleich" method="GET" className="space-y-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold flex items-center justify-between">
-                                    Wohneinheiten (WE) <span className="text-xs text-slate-400 font-normal">Mindestens</span>
+                                    Wohneinheiten (WE)
                                 </label>
-                                <div className="flex bg-slate-100 rounded-lg overflow-hidden border p-1">
-                                    {[2, 6, 12, 30].map(v => (
-                                        <label key={v} className="flex-1 text-center cursor-pointer">
-                                            <input type="radio" name="we" value={v} defaultChecked={weQuery === v} className="sr-only peer" />
-                                            <div className="py-2 text-sm rounded-md peer-checked:bg-white peer-checked:text-green-600 peer-checked:shadow-sm peer-checked:font-medium transition-all">
-                                                {v}+
-                                            </div>
-                                        </label>
-                                    ))}
-                                </div>
+                                <select name="we" defaultValue={weQuery || ""} className="w-full bg-slate-50 border border-slate-200 rounded-xl h-11 px-4 text-slate-700 focus:ring-2 focus:ring-green-500 outline-none">
+                                    <option value="">Alle anzeigen</option>
+                                    <option value="4">3 - 6 Einheiten</option>
+                                    <option value="10">7 - 12 Einheiten</option>
+                                    <option value="16">13 - 20 Einheiten</option>
+                                    <option value="30">21 - 50 Einheiten</option>
+                                    <option value="60">50+ Einheiten</option>
+                                </select>
                             </div>
 
                             <div className="space-y-3 pt-4 border-t">
-                                <label className="text-sm font-semibold">Leistungen (Zukünftig)</label>
+                                <label className="text-sm font-semibold">Besondere Leistungen</label>
                                 {[
-                                    { id: 'pv', label: 'PV-Anlage' },
-                                    { id: 'bhkw', label: 'BHKW-Lösungen' },
-                                    { id: 'speicher', label: 'Gewerbespeicher' },
-                                    { id: 'wallbox', label: 'Wallboxen' }
+                                    { id: 'pv', label: 'PV-Anlage installieren', checked: pvQuery },
+                                    { id: 'bhkw', label: 'BHKW-Lösungen', checked: bhkwQuery },
+                                    { id: 'speicher', label: 'Gewerbespeicher', checked: speicherQuery },
+                                    { id: 'wallbox', label: 'Wallboxen', checked: wallboxQuery }
                                 ].map(f => (
                                     <label key={f.id} className="flex items-center gap-3 cursor-pointer">
-                                        <input type="checkbox" className="w-4 h-4 rounded text-green-600 focus:ring-green-500" disabled />
+                                        <input type="checkbox" name={f.id} defaultChecked={f.checked} className="w-4 h-4 rounded text-green-600 focus:ring-green-500" />
                                         <span className="text-sm text-slate-600">{f.label}</span>
                                     </label>
                                 ))}
