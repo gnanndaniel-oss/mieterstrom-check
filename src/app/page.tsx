@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, ChevronRight, Zap, Building2, Battery, Euro, 
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
+import { StorageLeverageChart, ComplianceShieldGraphic } from "@/components/Infographics";
 
 export const dynamic = 'force-dynamic';
 
@@ -151,29 +152,19 @@ export default async function Home() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4 pt-8">
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <Battery className="w-10 h-10 text-blue-500 mb-4" />
-                  <h4 className="font-bold text-lg mb-2 text-slate-900">Mit Gewerbespeicher</h4>
-                  <p className="text-sm text-slate-600">Maximaler Eigenverbrauch (bis zu 90%) und höchste Rendite.</p>
-                </div>
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <Euro className="w-10 h-10 text-yellow-500 mb-4" />
-                  <h4 className="font-bold text-lg mb-2 text-slate-900">Mieterstromzuschlag</h4>
-                  <p className="text-sm text-slate-600">Bis zu 2,59 ct/kWh On-Top Förderung vom Staat gesichert für 20 Jahre.</p>
-                </div>
-              </div>
-              <div className="space-y-4">
+            <div className="flex flex-col gap-12 pt-8">
+              <StorageLeverageChart />
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden group">
                   <div className="absolute inset-0 bg-green-600/5 group-hover:bg-green-600/10 transition-colors" />
                   <div className="text-4xl font-black text-green-600 mb-2">96%</div>
                   <h4 className="font-bold text-lg mb-2 text-slate-900">Autarkie</h4>
                   <p className="text-sm text-slate-600">Unabhängigkeit von steigenden Strompreisen der Netzbetreiber.</p>
                 </div>
-                <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-xl flex items-center justify-center text-center flex-col h-48">
-                  <Zap className="w-10 h-10 text-yellow-500 mb-4 fill-yellow-500 animate-pulse" />
-                  <h4 className="font-bold text-lg">Jetzt umsteigen</h4>
+                <div className="bg-white border rounded-2xl p-6 shadow-sm overflow-hidden flex items-center justify-center">
+                  <div className="scale-75 origin-center w-full">
+                    <ComplianceShieldGraphic />
+                  </div>
                 </div>
               </div>
             </div>
