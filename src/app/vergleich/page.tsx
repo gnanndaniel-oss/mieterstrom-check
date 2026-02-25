@@ -1,0 +1,149 @@
+import Link from "next/link";
+import { Check, Euro, Building2, Zap, ArrowRight, Home, Search, Star } from "lucide-react";
+import prisma from "@/lib/prisma";
+import { Button } from "@/components/ui/button";
+
+export const dynamic = 'force-dynamic';
+
+export default async function VergleichPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+    const sp = await searchParams;
+    const weQuery = typeof sp.we === 'string' ? parseInt(sp.we, 10) : undefined;
+
+    // Minimal filter logic
+    const anbieter = await prisma.anbieter.findMany({
+        where: weQuery ? {
+            mindestWE: { lte: weQuery }
+        } : undefined,
+        orderBy: {
+            name: 'asc'
+        }
+    });
+
+    return (
+        <div className="bg-slate-50 min-h-screen">
+            <div className="bg-slate-900 py-16 text-white mb-8 border-b border-slate-800">
+                <div className="container mx-auto px-4">
+                    <h1 className="text-4xl font-bold mb-4">Mieterstrom-Anbieter im Vergleich</h1>
+                    <p className="text-xl text-slate-300 max-w-2xl">Finden Sie den besten Partner für Ihr Mehrfamilienhaus. Transparent und unabhängig.</p>
+                </div>
+            </div>
+
+            <div className="container mx-auto px-4 pb-24 grid lg:grid-cols-4 gap-8">
+                {/* Sidebar Filters */}
+                <div className="lg:col-span-1 space-y-6">
+                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 sticky top-24">
+                        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                            <Search className="w-5 h-5 text-slate-400" /> Filter
+                        </h3>
+                        <form action="/vergleich" method="GET" className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold flex items-center justify-between">
+                                    Wohneinheiten (WE) <span className="text-xs text-slate-400 font-normal">Mindestens</span>
+                                </label>
+                                <div className="flex bg-slate-100 rounded-lg overflow-hidden border p-1">
+                                    {[2, 6, 12, 30].map(v => (
+                                        <label key={v} className="flex-1 text-center cursor-pointer">
+                                            <input type="radio" name="we" value={v} defaultChecked={weQuery === v} className="sr-only peer" />
+                                            <div className="py-2 text-sm rounded-md peer-checked:bg-white peer-checked:text-green-600 peer-checked:shadow-sm peer-checked:font-medium transition-all">
+                                                {v}+
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-3 pt-4 border-t">
+                                <label className="text-sm font-semibold">Leistungen (Zukünftig)</label>
+                                {[
+                                    { id: 'pv', label: 'PV-Anlage' },
+                                    { id: 'bhkw', label: 'BHKW-Lösungen' },
+                                    { id: 'speicher', label: 'Gewerbespeicher' },
+                                    { id: 'wallbox', label: 'Wallboxen' }
+                                ].map(f => (
+                                    <label key={f.id} className="flex items-center gap-3 cursor-pointer">
+                                        <input type="checkbox" className="w-4 h-4 rounded text-green-600 focus:ring-green-500" disabled />
+                                        <span className="text-sm text-slate-600">{f.label}</span>
+                                    </label>
+                                ))}
+                            </div>
+
+                            <Button type="submit" className="w-full bg-slate-900 border text-white hover:bg-slate-800">
+                                Ergebnisse aktualisieren
+                            </Button>
+                        </form>
+                    </div>
+                </div>
+
+                {/* Results */}
+                <div className="lg:col-span-3 space-y-6">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-lg text-slate-600">
+                            <span className="font-bold text-slate-900">{anbieter.length}</span> Dienstleister gefunden
+                        </h2>
+                    </div>
+
+                    <div className="grid gap-6">
+                        {anbieter.map((a: any) => (
+                            <div key={a.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow">
+                                <div className="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col justify-between bg-slate-50/50">
+                                    <div>
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3 className="text-xl font-bold text-slate-900">{a.name}</h3>
+                                            <div className="flex items-center text-sm font-medium text-yellow-500">
+                                                <Star className="w-4 h-4 mr-1 fill-yellow-500" /> 4.{Math.floor(Math.random() * 5) + 5}
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-slate-500 mb-4">{a.standort} • ab {a.mindestWE} WE</p>
+                                        <p className="text-sm text-slate-700 leading-relaxed mb-4">{a.kurzBeschreibung}</p>
+                                    </div>
+
+                                    <div className="space-y-2 mt-4">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-500">Rendite</span>
+                                            <span className="font-semibold text-green-600">{a.renditeMin}-{a.renditeMax}%</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-500">Mieter-Ersparnis</span>
+                                            <span className="font-semibold">{a.ersparnisMin}-{a.ersparnisMax}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-6 md:w-2/3 flex flex-col justify-between">
+                                    <div>
+                                        <h4 className="text-sm font-semibold mb-3 text-slate-900">Enthaltene Leistungen</h4>
+                                        <div className="flex flex-wrap gap-2 mb-6">
+                                            {a.planungKonzeption && <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">Planung</span>}
+                                            {a.finanzierung && <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">Finanzierung</span>}
+                                            {a.installationPV && <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-100">PV, Installation</span>}
+                                            {a.speicher && <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-100">Speicher</span>}
+                                            {a.abrechnungssoftware && <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">Abrechnung/Software</span>}
+                                            {a.wallboxen && <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100">Wallbox</span>}
+                                        </div>
+
+                                        <h4 className="text-sm font-semibold mb-3 text-slate-900">Unterstützte Modelle</h4>
+                                        <div className="flex items-center gap-4 text-sm text-slate-600">
+                                            {a.modellMieterstrom && <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> Mieterstrom</span>}
+                                            {a.modellGGV && <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> Gebäudeversorgung (GGV)</span>}
+                                            {a.modellContracting && <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> Contracting</span>}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-slate-100">
+                                        <Button asChild className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md cursor-pointer">
+                                            {/* Normalerweise Modal für Lead, wir linken auf Kontakt oder Rechner */}
+                                            <Link href={`/rechner`}>Profil & Angebot anfragen</Link>
+                                        </Button>
+                                        <Button asChild variant="outline" className="flex-1 rounded-xl cursor-pointer bg-white text-slate-900 border-2">
+                                            <Link href={`/anbieter/${a.slug}`}>Mehr erfahren</Link>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

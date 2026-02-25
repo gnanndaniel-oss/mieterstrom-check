@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Anbieter {
+  id                  String   @id @default(cuid())
+  slug                String   @unique
+  name                String
+  logo                String?  // URL zum Logo
+  kurzBeschreibung    String
+  beschreibung        String  
+  gruendungsjahr      Int?
+  standort            String?
+  website             String?
+
+  // Leistungen (Boolean-Felder)
+  planungKonzeption   Boolean  @default(false)
+  finanzierung        Boolean  @default(false)
+  installationPV      Boolean  @default(false)
+  bhkw                Boolean  @default(false)
+  wallboxen           Boolean  @default(false)
+  speicher            Boolean  @default(false)
+  messkonzept         Boolean  @default(false)
+  abrechnungssoftware Boolean  @default(false)
+  mieterkommunikation Boolean  @default(false)
+  wartungBetrieb      Boolean  @default(false)
+  reststromversorgung Boolean  @default(false)
+  mieterApp           Boolean  @default(false)
+
+  // Modelle
+  modellMieterstrom   Boolean  @default(false)
+  modellGGV           Boolean  @default(false)
+  modellContracting   Boolean  @default(false)
+  modellLieferkette   Boolean  @default(false)
+
+  // Konditionen
+  mindestWE           Int?     // Mindest-Wohneinheiten
+  maxWE               Int?
+  investitionDurch    String?  // "anbieter" | "eigentuemer" | "beide"
+  renditeMin          Float?
+  renditeMax          Float?
+  ersparnisMin        Float?   // Mieter-Ersparnis in %
+  ersparnisMax        Float?
+
+  // Regionen (kommasepariert oder Relation)
+  regionen            String?  // "bundesweit" oder "Bayern,BW,NRW"
+
+  // Bewertung
+  bewertung           Float?   @default(0)
+  anzahlBewertungen   Int      @default(0)
+
+  // SEO
+  metaTitle           String?
+  metaDescription     String?
+
+  // Timestamps
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  veroeffentlicht     Boolean  @default(false)
+
+  // Relations
+  referenzen          Referenz[]
+  bewertungen         Bewertung[]
+  leads               Lead[]
+}
+
+model Referenz {
+  id            String   @id @default(cuid())
+  anbieterId    String
+  anbieter      Anbieter @relation(fields: [anbieterId], references: [id])
+  projektName   String
+  standort      String?
+  wohneinheiten Int?
+  leistungKWp   Float?
+  beschreibung  String? 
+  bildUrl       String?
+  createdAt     DateTime @default(now())
+}
+
+model Bewertung {
+  id          String   @id @default(cuid())
+  anbieterId  String
+  anbieter    Anbieter @relation(fields: [anbieterId], references: [id])
+  name        String
+  sterne      Int      // 1-5
+  kommentar   String? 
+  verifiziert Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Lead {
+  id              String   @id @default(cuid())
+  anrede          String?
+  vorname         String
+  nachname        String
+  email           String
+  telefon         String?
+  firma           String?
+  rolle           String?
+  anzahlObjekte   String?
+  nachricht       String? 
+  newsletter      Boolean  @default(false)
+
+  // Verknüpfung
+  anbieterId      String?
+  anbieter        Anbieter? @relation(fields: [anbieterId], references: [id])
+
+  // Rechner-Daten (JSON)
+  rechnerDaten    Json?
+
+  // Status
+  status          String   @default("neu") // neu, kontaktiert, qualifiziert, abgeschlossen
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Foerdersatz {
+  id                String   @id @default(cuid())
+  typ               String   // "mieterstromzuschlag" | "einspeiseverguetung"
+  anlagenGroesseVon Float    // kWp
+  anlagenGroesseBis Float    // kWp
+  satz              Float    // ct/kWh
+  gueltigVon        DateTime
+  gueltigBis        DateTime
+  createdAt         DateTime @default(now())
+}
+
+model BlogPost {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  titel           String
+  excerpt         String? 
+  inhalt          String   // Markdown oder HTML
+  kategorie       String
+  tags            String?  // Kommasepariert
+  autor           String?
+  titelbild       String?
+  metaTitle       String?
+  metaDescription String?
+  veroeffentlicht Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model KontaktAnfrage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  betreff   String?
+  nachricht String  
+  createdAt DateTime @default(now())
+}
+
+model NewsletterAbonnent {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  aktiv     Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
