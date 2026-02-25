@@ -13,9 +13,11 @@ export default async function VergleichPage({ searchParams }: { searchParams: Pr
     const bhkwQuery = sp.bhkw === 'on';
     const speicherQuery = sp.speicher === 'on';
     const wallboxQuery = sp.wallbox === 'on';
+    const kategorieQuery = typeof sp.kategorie === 'string' ? sp.kategorie : undefined;
 
     const whereClause: any = {};
     if (weQuery) whereClause.mindestWE = { lte: weQuery };
+    if (kategorieQuery) whereClause.kategorie = kategorieQuery;
     if (pvQuery) whereClause.installationPV = true;
     if (bhkwQuery) whereClause.bhkw = true;
     if (speicherQuery) whereClause.speicher = true;
@@ -46,18 +48,33 @@ export default async function VergleichPage({ searchParams }: { searchParams: Pr
                             <Search className="w-5 h-5 text-slate-400" /> Filter
                         </h3>
                         <form action="/vergleich" method="GET" className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold flex items-center justify-between">
-                                    Wohneinheiten (WE)
-                                </label>
-                                <select name="we" defaultValue={weQuery || ""} className="w-full bg-slate-50 border border-slate-200 rounded-xl h-11 px-4 text-slate-700 focus:ring-2 focus:ring-green-500 outline-none">
-                                    <option value="">Alle anzeigen</option>
-                                    <option value="4">3 - 6 Einheiten</option>
-                                    <option value="10">7 - 12 Einheiten</option>
-                                    <option value="16">13 - 20 Einheiten</option>
-                                    <option value="30">21 - 50 Einheiten</option>
-                                    <option value="60">50+ Einheiten</option>
-                                </select>
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold flex items-center justify-between">
+                                        Anbieter-Kategorie
+                                    </label>
+                                    <select name="kategorie" defaultValue={kategorieQuery || ""} className="w-full bg-slate-50 border border-slate-200 rounded-xl h-11 px-4 text-slate-700 focus:ring-2 focus:ring-green-500 outline-none">
+                                        <option value="">Alle Kategorien</option>
+                                        <option value="Spezialisierte Dienstleister">Spezialisierte Dienstleister</option>
+                                        <option value="Software & Abrechnung">Software & Abrechnung</option>
+                                        <option value="Große Energieversorger">Große Energieversorger</option>
+                                        <option value="Kommunal & Regional">Kommunal & Regional</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold flex items-center justify-between">
+                                        Wohneinheiten (WE)
+                                    </label>
+                                    <select name="we" defaultValue={weQuery || ""} className="w-full bg-slate-50 border border-slate-200 rounded-xl h-11 px-4 text-slate-700 focus:ring-2 focus:ring-green-500 outline-none">
+                                        <option value="">Alle anzeigen</option>
+                                        <option value="4">3 - 6 Einheiten</option>
+                                        <option value="10">7 - 12 Einheiten</option>
+                                        <option value="16">13 - 20 Einheiten</option>
+                                        <option value="30">21 - 50 Einheiten</option>
+                                        <option value="60">50+ Einheiten</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div className="space-y-3 pt-4 border-t">
