@@ -8,6 +8,11 @@ export default async function AdminDashboard() {
     const anbieterCount = await prisma.anbieter.count();
     const leadsCount = await prisma.lead.count();
 
+    const leads = await prisma.lead.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 10
+    });
+
     return (
         <div className="bg-slate-100 min-h-screen">
             <div className="bg-slate-900 py-6 text-white border-b border-slate-800">
@@ -48,14 +53,44 @@ export default async function AdminDashboard() {
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
                     <div className="flex items-center justify-between mb-8 pb-4 border-b">
-                        <h3 className="text-xl font-bold">Schnellaktionen</h3>
+                        <h3 className="text-xl font-bold">Zuletzt eingegangene Leads</h3>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <Button className="h-14 font-semibold text-md w-full gap-2" variant="outline"><Plus className="w-5 h-5" /> Anbieter anlegen</Button>
-                        <Button className="h-14 font-semibold text-md w-full gap-2" variant="outline"><FileText className="w-5 h-5" /> Blogpost schreiben</Button>
-                        <Button className="h-14 font-semibold text-md w-full gap-2" variant="outline"><Database className="w-5 h-5" /> Fördersätze bearbeiten</Button>
-                        <Button className="h-14 font-semibold text-md w-full gap-2" variant="outline"><Users className="w-5 h-5" /> Leads exportieren</Button>
-                    </div>
+                    {leads.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b">
+                                    <tr>
+                                        <th className="px-4 py-3">Datum</th>
+                                        <th className="px-4 py-3">Name</th>
+                                        <th className="px-4 py-3">Kontakt</th>
+                                        <th className="px-4 py-3">Einheiten</th>
+                                        <th className="px-4 py-3">Status</th>
+                                        <th className="px-4 py-3">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {leads.map((lead: any) => (
+                                        <tr key={lead.id} className="border-b hover:bg-slate-50">
+                                            <td className="px-4 py-3 text-slate-600">{new Date(lead.createdAt).toLocaleDateString("de-DE")}</td>
+                                            <td className="px-4 py-3 font-medium text-slate-900">{lead.vorname} {lead.nachname}</td>
+                                            <td className="px-4 py-3 text-slate-600">{lead.email}<br /><span className="text-xs">{lead.telefon || '-'}</span></td>
+                                            <td className="px-4 py-3 text-slate-600">{lead.anzahlObjekte || '-'}</td>
+                                            <td className="px-4 py-3">
+                                                <span className={`px-2 py-1 rounded text-xs font-medium ${lead.status === 'neu' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700'}`}>
+                                                    {lead.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-slate-500 text-xs">
+                                                {lead.anbieterId ? `Anbieter ID: ${lead.anbieterId}` : '-'}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p className="text-slate-500 text-sm">Bisher keine Leads vorhanden.</p>
+                    )}
                 </div>
             </div>
         </div>

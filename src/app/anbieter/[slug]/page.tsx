@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, XCircle, Building2, Battery, Cpu, Activity, Zap, Euro } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
+import { LeadModal } from "@/components/LeadModal";
 
 export default async function AnbieterDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -47,9 +48,11 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                         <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md">
                             <h3 className="text-lg font-bold mb-4">Interesse an {anbieter.name}?</h3>
                             <p className="text-sm text-slate-400 mb-6">Prüfen Sie völlig kostenlos Ihre Wirtschaftlichkeit und fordern Sie ein direktes Angebot an.</p>
-                            <Button asChild className="w-full bg-green-600 hover:bg-green-500 text-white rounded-xl h-12 text-md shadow-lg shadow-green-600/20 mb-3">
-                                <Link href="/rechner">Projekt planen</Link>
-                            </Button>
+                            <LeadModal
+                                anbieterId={anbieter.id.toString()}
+                                buttonText="Angebot anfragen"
+                                className="w-full bg-green-600 hover:bg-green-500 text-white rounded-xl h-12 text-md shadow-lg shadow-green-600/20 mb-3"
+                            />
                         </div>
                     </div>
                 </div>

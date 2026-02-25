@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, ArrowLeft, CheckCircle2, Calculator, BarChart3, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LeadModal } from "@/components/LeadModal";
 
 export default function RechnerPage() {
     const [step, setStep] = useState(1);
@@ -223,14 +224,12 @@ export default function RechnerPage() {
 
                             <div className="p-6 bg-slate-100 rounded-2xl text-center space-y-4">
                                 <h3 className="font-bold text-xl">Lassen Sie dieses Projekt professionell prüfen!</h3>
-                                <p className="text-slate-600">Wir vergleichen und finden den Dienstleister, der diese Wirtschaftlichkeit für Sie realisiert.</p>
-                                <form action="/vergleich" className="max-w-md mx-auto relative group">
-                                    <input type="hidden" name="we" value={formData.we} />
-                                    <input type="email" placeholder="E-Mail Adresse" required className="w-full h-14 pl-6 pr-32 rounded-full border-2 border-slate-300 focus:border-green-600 outline-none transition-colors" />
-                                    <Button type="submit" className="absolute right-1 top-1 h-12 rounded-full bg-green-600 hover:bg-green-700 px-6 font-semibold">
-                                        Angebote anfordern
-                                    </Button>
-                                </form>
+                                <p className="text-slate-600 mb-4">Wir vergleichen und finden den Dienstleister, der diese Wirtschaftlichkeit für Sie realisiert.</p>
+                                <LeadModal
+                                    rechnerDaten={formData}
+                                    buttonText="Unverbindliches Angebot anfordern"
+                                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 h-12 px-8 rounded-full font-semibold text-white shadow-md shadow-green-600/20"
+                                />
                             </div>
                         </div>
                     )}

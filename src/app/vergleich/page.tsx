@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Check, Euro, Building2, Zap, ArrowRight, Home, Search, Star } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
+import { LeadModal } from "@/components/LeadModal";
 
 export const dynamic = 'force-dynamic';
 
@@ -130,10 +131,11 @@ export default async function VergleichPage({ searchParams }: { searchParams: Pr
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-slate-100">
-                                        <Button asChild className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md cursor-pointer">
-                                            {/* Normalerweise Modal für Lead, wir linken auf Kontakt oder Rechner */}
-                                            <Link href={`/rechner`}>Profil & Angebot anfragen</Link>
-                                        </Button>
+                                        <LeadModal
+                                            anbieterId={a.id}
+                                            buttonText="Profil & Angebot anfragen"
+                                            className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-md cursor-pointer"
+                                        />
                                         <Button asChild variant="outline" className="flex-1 rounded-xl cursor-pointer bg-white text-slate-900 border-2">
                                             <Link href={`/anbieter/${a.slug}`}>Mehr erfahren</Link>
                                         </Button>

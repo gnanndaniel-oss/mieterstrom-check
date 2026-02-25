@@ -465,20 +465,81 @@ async function main() {
   }
 
   // Blogposts Placeholder Seed
-  // "Mieterstrom 2025/2026: Der komplette Leitfaden für Vermieter"
   await prisma.blogPost.upsert({
     where: { slug: 'mieterstrom-2025-2026' },
     update: {},
     create: {
       slug: 'mieterstrom-2025-2026',
       titel: 'Mieterstrom 2025/2026: Der komplette Leitfaden für Vermieter',
-      excerpt: 'Alles was Sie über Mieterstrom im Jahr 2025 und 2026 wissen müssen.',
-      inhalt: '## Einleitung\nMieterstrom wird immer attraktiver...',
+      excerpt: 'Alles was Sie über Mieterstrom im Jahr 2025 und 2026 wissen müssen. So steigern Sie die Rendite Ihrer Immobilien.',
+      inhalt: `## Einleitung
+Mieterstrom wird immer attraktiver. Durch das neue Solarpaket I von 2024 und die stabilisierten Fördersätze für 2025/2026 ist der Bau einer Photovoltaikanlage auf Mehrfamilienhäusern so rentabel wie nie.
+
+### Was hat sich geändert?
+1. **Bürokratieabbau**: Einfachere Anmeldung und entfallene Personenidentität zwischen Anlagenbetreiber und Stromverkäufer.
+2. **Gebäudeversorgung (GGV)**: Ein völlig neues Modell nach § 42b EnWG (Gemeinschaftliche Gebäudeversorgung) erlaubt die unbürokratische Aufteilung des erzeugten Stroms ohne die restriktiven Pflichten des klassischen Mieterstroms (z.B. keine Reststromlieferpflicht).
+3. **Speicherförderung**: Die Integration von großen Batteriespeichern wurde erleichtert.
+
+Mit Modellen wie dem **Contracting** können Sie als Immobilienbesitzer völlig risikofrei agieren.`,
       kategorie: 'Recht',
       autor: 'Admin',
       veroeffentlicht: true
     }
-  })
+  });
+
+  await prisma.blogPost.upsert({
+    where: { slug: 'gebaeudeversorgung-vs-mieterstrom' },
+    update: {},
+    create: {
+      slug: 'gebaeudeversorgung-vs-mieterstrom',
+      titel: 'Gebäudeversorgung (GGV) oder echter Mieterstrom?',
+      excerpt: 'Die Novelle des Solarpakets I hat die GGV eingeführt. Doch welches Modell passt besser zu Ihrem Gebäude?',
+      inhalt: `Die neue **Gemeinschaftliche Gebäudeversorgung (GGV)** löst viele Probleme des alten Mieterstrommodells. Aber sie ist nicht immer die bessere Wahl.
+
+## Echter Mieterstrom (§ 42a EnWG)
+Beim echten Mieterstrom werden Sie (oder Ihr Dienstleister) zum Energieversorger. Sie liefern dem Mieter ein Komplettpaket aus Solarstrom vom Dach und Reststrom aus dem Netz.
+**Vorteile**:
+- Mieterstromzuschlag (rund 2,5 ct/kWh Förderung)
+- Höchste Rendite bei Vollausbau
+- Alles aus einer Hand für den Mieter
+
+## Gemeinschaftliche Gebäudeversorgung (§ 42b EnWG)
+Hierbei wird nur der Solarstrom prozentual an die teilnehmenden Mieter aufgeteilt. Für den Reststrom behält der Mieter seinen eigenen, klassischen Stromvertrag bei den Stadtwerken.
+**Vorteile**:
+- **Keine Versorgerpflichten**: Sie müssen keinen Reststrom einkaufen.
+- Kein bürokratischer Aufwand mit Kündigungen von Alt-Verträgen.
+**Nachteil**: Kein staatlicher Mieterstromzuschlag aus dem EEG.
+
+### Fazit
+Für Projekte unter 10 Wohneinheiten ist die GGV oft die stressfreiere Variante. Ab 10 WE oder bei Einsatz eines Contractors (wie *enTena* oder *Polarstern*) ist der echte Mieterstrom aufgrund der Förderungen finanziell attraktiver.`,
+      kategorie: 'Modelle',
+      autor: 'Admin',
+      veroeffentlicht: true
+    }
+  });
+
+  await prisma.blogPost.upsert({
+    where: { slug: 'storage-leverage-mieterstrom' },
+    update: {},
+    create: {
+      slug: 'storage-leverage-mieterstrom',
+      titel: 'Der Storage-Leverage: Warum sich Mieterstrom nur mit Batterie lohnt!',
+      excerpt: 'Warum klassische PV-Anlagen ohne Speicher im Mehrfamilienhaus Potenzial verschenken und wie Sie die Autarkie auf über 60% steigern.',
+      inhalt: `Die klassischen Verbrauchskurven in Wohngebäuden zeigen deutlich: Wenn die Sonne mittags am stärksten scheint, sind die meisten Mieter auf der Arbeit. Der meiste Strom wird abends und morgens benötigt.
+
+## Das Problem der Eigenverbrauchsquote
+Ohne Speichermedium liegt die sogenannte Eigenverbrauchsquote (der Teil des Solarstroms, der direkt im Gebäude verbraucht wird) in Mehrfamilienhäusern oft nur bei **25% bis 35%**. Der Rest wird für magere 7-8 Cent netzeingespeist.
+
+## Die Lösung: Gewerbespeicher (Storage Leverage)
+Durch die Integration eines großen Batteriespeichers (z.B. 20 - 50 kWh) lässt sich die Eigenverbrauchsquote massiv auf **60% bis über 70%** anheben.
+Da der Mieterstrom für ca. 25 bis 30 Cent an die Mieter verkauft wird, steigt die Marge für den Betreiber enorm. Der Speicher "hebelt" die Skaleneffekte der großen Dach-Anlage.
+
+Insbesondere im B2B-Umfeld oder bei innovativen Partnern wie *enTena* wird der Speicher stets als zentrales Element der Wirtschaftlichkeit betrachtet.`,
+      kategorie: 'Wirtschaftlichkeit',
+      autor: 'Admin',
+      veroeffentlicht: true
+    }
+  });
 
   console.log('Seeding finished.')
 }
