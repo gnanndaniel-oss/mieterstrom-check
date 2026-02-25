@@ -9,7 +9,7 @@ export async function submitProviderApplication(formData: FormData) {
     const firma = formData.get("firma")?.toString() || "";
     const name = formData.get("name")?.toString() || "";
     const email = formData.get("email")?.toString();
-    const bewerhung = formData.get("website")?.toString() || "";
+    const bewerbung = formData.get("website")?.toString() || "";
     const typ = formData.get("typ")?.toString() || "";
 
     if (!email || !firma) {
@@ -22,7 +22,7 @@ export async function submitProviderApplication(formData: FormData) {
                 name: `${firma} (${name})`,
                 email: email,
                 betreff: `Neuer Dienstleister: ${firma}`,
-                nachricht: `Bewerbung als: ${typ}\nWebsite: ${bewerhung}`
+                nachricht: `Bewerbung als: ${typ}\nWebsite: ${bewerbung}`
             }
         });
 
@@ -36,7 +36,7 @@ export async function submitProviderApplication(formData: FormData) {
           <p><strong>Firma:</strong> ${firma}</p>
           <p><strong>Ansprechpartner:</strong> ${name}</p>
           <p><strong>Typ:</strong> ${typ}</p>
-          <p><strong>Website:</strong> <a href="${bewerhung}">${bewerhung}</a></p>
+          <p><strong>Website:</strong> <a href="${bewerbung}">${bewerbung}</a></p>
           <p><strong>E-Mail:</strong> ${email}</p>
         `
             });

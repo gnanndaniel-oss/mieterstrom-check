@@ -13,6 +13,11 @@ export default async function AdminDashboard() {
         take: 10
     });
 
+    const anfragen = await prisma.kontaktAnfrage.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 10
+    });
+
     return (
         <div className="bg-slate-100 min-h-screen">
             <div className="bg-slate-900 py-6 text-white border-b border-slate-800">
@@ -90,6 +95,38 @@ export default async function AdminDashboard() {
                         </div>
                     ) : (
                         <p className="text-slate-500 text-sm">Bisher keine Leads vorhanden.</p>
+                    )}
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mt-8">
+                    <div className="flex items-center justify-between mb-8 pb-4 border-b">
+                        <h3 className="text-xl font-bold">Zuletzt eingegangene Partner-Bewerbungen</h3>
+                    </div>
+                    {anfragen.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b">
+                                    <tr>
+                                        <th className="px-4 py-3">Datum</th>
+                                        <th className="px-4 py-3">Name / Firma</th>
+                                        <th className="px-4 py-3">E-Mail</th>
+                                        <th className="px-4 py-3">Nachricht</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {anfragen.map((anfrage: any) => (
+                                        <tr key={anfrage.id} className="border-b hover:bg-slate-50">
+                                            <td className="px-4 py-3 text-slate-600">{new Date(anfrage.createdAt).toLocaleDateString("de-DE")}</td>
+                                            <td className="px-4 py-3 font-medium text-slate-900">{anfrage.name}</td>
+                                            <td className="px-4 py-3 text-slate-600">{anfrage.email}</td>
+                                            <td className="px-4 py-3 text-slate-500 text-xs whitespace-pre-wrap">{anfrage.nachricht}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p className="text-slate-500 text-sm">Bisher keine Partner-Bewerbungen vorhanden.</p>
                     )}
                 </div>
             </div>

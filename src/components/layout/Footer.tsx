@@ -36,6 +36,7 @@ export function Footer() {
                             <li><Link href="/mieterstrom-guide/foerderung" className="hover:text-green-400 transition-colors">Förderung & Zuschlag</Link></li>
                             <li><Link href="/mieterstrom-guide/recht" className="hover:text-green-400 transition-colors">Rechtliche Vorgaben</Link></li>
                             <li><Link href="/mieterstrom-guide/gebaeudeversorgung" className="hover:text-green-400 transition-colors">Gebäudeversorgung (GGV)</Link></li>
+                            <li><Link href="/mieterstrom-guide/warum-speicher" className="hover:text-green-400 transition-colors">Warum Speicher?</Link></li>
                         </ul>
                     </div>
 
@@ -45,7 +46,7 @@ export function Footer() {
                             <li><Link href="/impressum" className="hover:text-green-400 transition-colors">Impressum</Link></li>
                             <li><Link href="/datenschutz" className="hover:text-green-400 transition-colors">Datenschutz</Link></li>
                             <li><Link href="/kontakt" className="hover:text-green-400 transition-colors">Kontakt</Link></li>
-                            <li><Link href="/admin" className="hover:text-green-400 transition-colors">Partnernetzwerk</Link></li>
+                            <li><Link href="/anbieter" className="hover:text-green-400 transition-colors">Partnernetzwerk</Link></li>
                         </ul>
                     </div>
                 </div>

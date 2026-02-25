@@ -165,8 +165,13 @@ function RechnerForm() {
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2 md:col-span-2">
                                     <label className="flex items-center justify-between cursor-pointer p-4 border rounded-xl hover:bg-slate-50 transition-colors border-green-200 bg-green-50/50">
-                                        <span className="font-semibold">Batteriespeicher integrieren (Empfohlen)</span>
-                                        <input type="checkbox" className="w-5 h-5" checked={formData.speicher} onChange={e => setFormData({ ...formData, speicher: e.target.checked })} />
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold">Batteriespeicher integrieren (Empfohlen)</span>
+                                            <a href="/mieterstrom-guide/warum-speicher" target="_blank" className="text-sm text-green-700 hover:underline flex items-center mt-1" onClick={(e) => e.stopPropagation()}>
+                                                Warum ein Speicher wichtig ist <ArrowRight className="w-3 h-3 ml-1" />
+                                            </a>
+                                        </div>
+                                        <input type="checkbox" className="w-5 h-5 flex-shrink-0 ml-4 cursor-pointer" checked={formData.speicher} onChange={e => setFormData({ ...formData, speicher: e.target.checked })} />
                                     </label>
                                 </div>
                                 {formData.speicher && (

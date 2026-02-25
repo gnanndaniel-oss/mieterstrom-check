@@ -62,6 +62,16 @@ export default function GuidePage() {
                         </div>
                     </Link>
 
+                    <Link href="/mieterstrom-guide/warum-speicher" className="group bg-white rounded-3xl p-8 border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all md:col-span-2 lg:col-span-1">
+                        <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors text-emerald-600">
+                            <Calculator className="w-6 h-6" />
+                        </div>
+                        <h2 className="text-2xl font-bold mb-3 text-slate-900 group-hover:text-emerald-600 transition-colors">Warum Speicher den Unterschied macht</h2>
+                        <p className="text-slate-600 leading-relaxed mb-6">Wie Sie mit einem Gewerbespeicher aus Mieterstrom ein hochrentables Investment-Grade Asset machen und Autarkiewerte von 96% erreichen.</p>
+                        <div className="flex items-center text-emerald-600 font-semibold text-sm">
+                            Weiterlesen <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </Link>
                 </div>
 
                 <div className="mt-16 bg-green-600 rounded-3xl p-8 md:p-12 text-white text-center shadow-xl shadow-green-600/20">

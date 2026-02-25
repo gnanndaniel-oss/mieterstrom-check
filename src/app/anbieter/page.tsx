@@ -5,6 +5,7 @@ import { CheckCircle2, TrendingUp, Users, Target, ShieldCheck, Mail, ArrowRight,
 import { Button } from "@/components/ui/button";
 import { submitProviderApplication } from "@/app/actions/submit-provider";
 import Link from "next/link";
+import { PartnerSynergyGraphic } from "@/components/Infographics";
 
 export default function AnbieterLandingPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,7 +121,7 @@ export default function AnbieterLandingPage() {
                         <p className="text-xl text-slate-600 max-w-2xl mx-auto">Warum Top-Anbieter wie EON, Naturstrom oder lokale Spezialisten mieterstrom-check nutzen.</p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-3 gap-8 mb-20">
                         <div className="bg-slate-50 border border-slate-100 p-8 rounded-3xl hover:shadow-lg transition-shadow">
                             <Target className="w-12 h-12 text-green-600 mb-6" />
                             <h3 className="text-xl font-bold mb-3 text-slate-900">100% Matching</h3>
@@ -142,6 +143,15 @@ export default function AnbieterLandingPage() {
                                 Platzieren Sie Ihre Marke in einem professionellen und informativen Umfeld. Durch unser fundiertes Infomaterial wie den Mieterstrom-Guide ist das Vertrauen der Nutzer maximal hoch.
                             </p>
                         </div>
+                    </div>
+
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Das perfekte Ökosystem für Kooperationen</h2>
+                        <p className="text-xl text-slate-600 max-w-2xl mx-auto">Vernetzen Sie sich kaufmännisch oder technisch mit komplementären Partnern, um Komplettlösungen anzubieten.</p>
+                    </div>
+
+                    <div className="max-w-4xl mx-auto">
+                        <PartnerSynergyGraphic />
                     </div>
                 </div>
             </div>

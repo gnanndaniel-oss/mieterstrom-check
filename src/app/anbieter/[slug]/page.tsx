@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CheckCircle2, XCircle, Building2, Battery, Cpu, Activity, Zap, Euro } from "lucide-react";
+import { CheckCircle2, XCircle, Building2, Battery, Cpu, Activity, Zap, Euro, Star, ShieldCheck } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { LeadModal } from "@/components/LeadModal";
@@ -9,7 +9,11 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
     const { slug } = await params;
 
     const anbieter = await prisma.anbieter.findUnique({
-        where: { slug: slug }
+        where: { slug: slug },
+        include: {
+            referenzen: true,
+            bewertungen: true
+        }
     });
 
     if (!anbieter) {
@@ -33,15 +37,32 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                             <p className="text-xl text-slate-300 leading-relaxed">{anbieter.kurzBeschreibung}</p>
 
                             <div className="flex flex-wrap gap-3 pt-2">
+                                {anbieter.kategorie && (
+                                    <span className="inline-flex items-center px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-semibold">
+                                        {anbieter.kategorie}
+                                    </span>
+                                )}
                                 <span className="inline-flex items-center px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm">
                                     {anbieter.standort}
                                 </span>
-                                <span className="inline-flex items-center px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm">
-                                    Gegründet {anbieter.gruendungsjahr}
+                                {anbieter.gruendungsjahr && (
+                                    <span className="inline-flex items-center px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm">
+                                        Gegründet {anbieter.gruendungsjahr}
+                                    </span>
+                                )}
+                                {(anbieter.mindestWE ?? 0) > 0 && (
+                                    <span className="inline-flex items-center px-3 py-1 bg-green-500/10 border border-green-500/20 text-green-400 rounded-full text-sm">
+                                        Ab {anbieter.mindestWE} Wohneinheiten
+                                    </span>
+                                )}
+                                <span className="inline-flex items-center px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-medium">
+                                    <ShieldCheck className="w-4 h-4 mr-1.5" /> Verifizierter Partner
                                 </span>
-                                <span className="inline-flex items-center px-3 py-1 bg-green-500/10 border border-green-500/20 text-green-400 rounded-full text-sm">
-                                    Ab {anbieter.mindestWE} Wohneinheiten
-                                </span>
+                                {anbieter.anzahlBewertungen > 0 && (
+                                    <span className="inline-flex items-center px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium">
+                                        <Star className="w-4 h-4 mr-1.5 fill-current" /> {anbieter.bewertung?.toFixed(1)} ({anbieter.anzahlBewertungen} Bewertungen)
+                                    </span>
+                                )}
                             </div>
                         </div>
 
@@ -65,8 +86,19 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                         {/* Description */}
                         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
                             <h2 className="text-2xl font-bold mb-4 text-slate-900">Über {anbieter.name}</h2>
+                            {anbieter.besonderheiten && (
+                                <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 flex items-start gap-4">
+                                    <div className="p-2 bg-green-100/50 rounded-lg text-green-600 hidden sm:block">
+                                        <Star className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-green-800 mb-1">Besonderheit / Alleinstellungsmerkmal</div>
+                                        <div className="text-green-700">{anbieter.besonderheiten}</div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed">
-                                {anbieter.beschreibung.split('\\n').map((para: any, i: number) => (
+                                {anbieter.beschreibung.split(/\r?\n|\\n/).map((para: any, i: number) => (
                                     <p key={i} className="mb-4">{para}</p>
                                 ))}
                             </div>
@@ -105,6 +137,88 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                                 })}
                             </div>
                         </div>
+
+                        {anbieter.referenzen && anbieter.referenzen.length > 0 && (
+                            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 mt-8">
+                                <h2 className="text-2xl font-bold mb-6 text-slate-900">Ausgewählte Referenzprojekte</h2>
+                                <div className="grid sm:grid-cols-2 gap-6">
+                                    {anbieter.referenzen.map((ref: any) => (
+                                        <div key={ref.id} className="bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden group hover:border-green-300 transition-colors">
+                                            {ref.bildUrl && (
+                                                <div className="h-40 bg-slate-200 relative">
+                                                    {/* Using regular img for external urls easily or next/image if hosted */}
+                                                    <img src={ref.bildUrl} alt={ref.projektName} className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity" />
+                                                </div>
+                                            )}
+                                            <div className="p-5">
+                                                <h4 className="font-bold text-slate-900 mb-1">{ref.projektName}</h4>
+                                                <div className="text-sm text-slate-500 mb-4">{ref.standort}</div>
+
+                                                <div className="flex flex-wrap gap-2 mb-3">
+                                                    {ref.wohneinheiten && (
+                                                        <span className="inline-flex items-center px-2 py-1 bg-white border border-slate-200 rounded text-xs font-semibold text-slate-700">
+                                                            <Building2 className="w-3 h-3 mr-1 text-slate-400" /> {ref.wohneinheiten} WE
+                                                        </span>
+                                                    )}
+                                                    {ref.leistungKWp && (
+                                                        <span className="inline-flex items-center px-2 py-1 bg-white border border-slate-200 rounded text-xs font-semibold text-slate-700">
+                                                            <Zap className="w-3 h-3 mr-1 text-yellow-500" /> {ref.leistungKWp} kWp
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                {ref.beschreibung && (
+                                                    <p className="text-xs text-slate-600 line-clamp-3">{ref.beschreibung}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {anbieter.bewertungen && anbieter.bewertungen.length > 0 && (
+                            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 mt-8">
+                                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                                    <h2 className="text-2xl font-bold text-slate-900">Kundenstimmen & Erfahrungen</h2>
+                                    <div className="flex items-center">
+                                        <div className="flex text-yellow-400 mr-2">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star key={i} className={`w-5 h-5 ${i < Math.round(anbieter.bewertung || 0) ? 'fill-current' : 'text-slate-200'}`} />
+                                            ))}
+                                        </div>
+                                        <span className="font-bold text-slate-900 text-lg">{anbieter.bewertung?.toFixed(1)}</span>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6">
+                                    {anbieter.bewertungen.map((review: any) => (
+                                        <div key={review.id} className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                            <div className="flex items-start justify-between mb-4">
+                                                <div>
+                                                    <div className="font-bold text-slate-900 flex items-center gap-2">
+                                                        {review.name}
+                                                        {review.verifiziert && (
+                                                            <span className="inline-flex items-center text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                                                                <ShieldCheck className="w-3 h-3 mr-1" /> Verifiziert
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-sm text-slate-500 mt-1">{new Date(review.createdAt).toLocaleDateString("de-DE")}</div>
+                                                </div>
+                                                <div className="flex text-yellow-400">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={i} className={`w-4 h-4 ${i < review.sterne ? 'fill-current' : 'text-slate-200'}`} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            {review.kommentar && (
+                                                <p className="text-slate-600 italic">"{review.kommentar}"</p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-6">
@@ -139,6 +253,13 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                                         <div className="font-bold text-lg text-blue-600">{anbieter.ersparnisMin}-{anbieter.ersparnisMax}%</div>
                                     </div>
                                 </div>
+
+                                {anbieter.zielgruppe && (
+                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                        <div className="text-sm text-slate-500 mb-1 flex items-center gap-1.5"><Building2 className="w-4 h-4" /> Optimale Zielgruppe</div>
+                                        <div className="font-semibold text-slate-900 mt-1">{anbieter.zielgruppe}</div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

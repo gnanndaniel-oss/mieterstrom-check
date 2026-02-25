@@ -17,6 +17,9 @@ model Anbieter {
   gruendungsjahr      Int?
   standort            String?
   website             String?
+  kategorie           String?
+  zielgruppe          String?
+  besonderheiten      String?
 
   // Leistungen (Boolean-Felder)
   planungKonzeption   Boolean  @default(false)

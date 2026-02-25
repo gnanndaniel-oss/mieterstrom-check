@@ -96,12 +96,18 @@ export default async function VergleichPage({ searchParams }: { searchParams: Pr
                                 <div className="p-6 md:w-1/3 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col justify-between bg-slate-50/50">
                                     <div>
                                         <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-xl font-bold text-slate-900">{a.name}</h3>
+                                            <div className="space-y-1">
+                                                {a.kategorie && (
+                                                    <div className="text-xs font-semibold text-blue-600 mb-1">{a.kategorie}</div>
+                                                )}
+                                                <h3 className="text-xl font-bold text-slate-900">{a.name}</h3>
+                                            </div>
                                             <div className="flex items-center text-sm font-medium text-yellow-500">
                                                 <Star className="w-4 h-4 mr-1 fill-yellow-500" /> 4.{Math.floor(Math.random() * 5) + 5}
                                             </div>
                                         </div>
-                                        <p className="text-sm text-slate-500 mb-4">{a.standort} • ab {a.mindestWE} WE</p>
+                                        <p className="text-sm text-slate-500 mb-2">{a.standort} {(a.mindestWE ?? 0) > 0 && `• ab ${a.mindestWE} WE`}</p>
+                                        {a.zielgruppe && <p className="text-xs font-semibold text-slate-600 mb-4 bg-slate-200/50 inline-block px-2 py-1 rounded">Zielgruppe: {a.zielgruppe}</p>}
                                         <p className="text-sm text-slate-700 leading-relaxed mb-4">{a.kurzBeschreibung}</p>
                                     </div>
 
