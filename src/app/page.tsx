@@ -65,11 +65,11 @@ export default async function Home() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-300">Anzahl Wohneinheiten</label>
                 <select name="we" className="w-full bg-slate-800/50 border border-slate-700 rounded-xl h-12 px-4 text-white focus:ring-2 focus:ring-green-500 outline-none">
-                  <option value="3-6">3 - 6 Einheiten</option>
-                  <option value="7-12">7 - 12 Einheiten</option>
-                  <option value="13-20">13 - 20 Einheiten</option>
-                  <option value="21-50">21 - 50 Einheiten</option>
-                  <option value="50+">50+ Einheiten</option>
+                  <option value="4">3 - 6 Einheiten</option>
+                  <option value="10">7 - 12 Einheiten</option>
+                  <option value="16">13 - 20 Einheiten</option>
+                  <option value="30">21 - 50 Einheiten</option>
+                  <option value="60">50+ Einheiten</option>
                 </select>
               </div>
               <div className="space-y-2">

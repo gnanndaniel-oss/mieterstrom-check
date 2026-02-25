@@ -1,19 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { ArrowRight, ArrowLeft, CheckCircle2, Calculator, BarChart3, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LeadModal } from "@/components/LeadModal";
+import { useSearchParams } from "next/navigation";
 
 export default function RechnerPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">Lade Rechner...</div>}>
+            <RechnerForm />
+        </Suspense>
+    );
+}
+
+function RechnerForm() {
+    const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
+    const initialWe = parseInt(searchParams.get("we") || "10", 10);
     const [formData, setFormData] = useState({
         // Step 1
-        we: 10,
+        we: initialWe,
         flaeche: 80,
-        typ: "bestand",
-        plz: "",
-        dachflaeche: 200,
+        typ: searchParams.get("type") || "bestand",
+        plz: searchParams.get("plz") || "",
+        dachflaeche: initialWe * 25, // Errechne ca. 25m2 Dachfläche pro Wohneinheit als Standardwert
         ausrichtung: "sued",
         // Step 2
         verbrauchWe: 2500,
