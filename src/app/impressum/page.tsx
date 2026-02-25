@@ -14,7 +14,7 @@ export default function ImpressumPage() {
                         <Scale className="w-8 h-8 text-green-400" />
                     </div>
                     <h1 className="text-4xl font-bold mb-4">Impressum</h1>
-                    <p className="text-xl text-slate-300">Angaben gemäß § 5 TMG</p>
+                    <p className="text-xl text-slate-300">Angaben gemäß § 5 DDG</p>
                 </div>
             </div>
 
