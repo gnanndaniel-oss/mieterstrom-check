@@ -6,9 +6,11 @@ import { EditAnbieterForm } from "./EditAnbieterForm";
 
 export const dynamic = 'force-dynamic';
 
-export default async function EditAnbieterPage({ params }: { params: { id: string } }) {
+export default async function EditAnbieterPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+
     const anbieter = await prisma.anbieter.findUnique({
-        where: { id: params.id }
+        where: { id }
     });
 
     if (!anbieter) {
