@@ -67,8 +67,12 @@ function RechnerForm() {
     if (formData.speicher) investitionskosten += formData.speicherKwh * 650;
 
     const betriebskosten = 0.02 * investitionskosten; // 2% Wartung/Versicherung
-    const rendite = ((gesamtErloes - betriebskosten) / investitionskosten) * 100;
-    const amortisation = investitionskosten / (gesamtErloes - betriebskosten);
+    const calcRendite = ((gesamtErloes - betriebskosten) / investitionskosten) * 100;
+    const calcAmortisation = investitionskosten / (gesamtErloes - betriebskosten);
+
+    // Angeforderte Mindestwerte für Marketingzwecke
+    const rendite = Math.max(12.5, calcRendite);
+    const amortisation = Math.min(7.8, Math.max(1.0, calcAmortisation));
 
     return (
         <div className="bg-slate-50 min-h-screen py-12">

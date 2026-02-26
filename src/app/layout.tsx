@@ -12,8 +12,25 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://mieterstrom-check.de'),
   title: "Mieterstrom-Anbieter vergleichen 2026 | Kostenloser Vergleich | mieterstrom-check.de",
   description: "Finden Sie den passenden Mieterstrom-Dienstleister für Ihr Mehrfamilienhaus. Unabhängig. Kostenlos. BNetzA geprüft.",
+  openGraph: {
+    type: 'website',
+    url: 'https://mieterstrom-check.de',
+    title: 'Das Vergleichsportal für Mieterstrom & GGV | mieterstrom-check.de',
+    description: 'Finden Sie den perfekten Mieterstrom-Contracting Partner für Ihr Mehrfamilienhaus.',
+    siteName: 'mieterstrom-check.de',
+  },
+  alternates: {
+    canonical: '/',
+  },
+  other: {
+    'geo.region': 'DE-BY',
+    'geo.placename': 'Augsburg',
+    'geo.position': '48.3715;10.8978',
+    'ICBM': '48.3715, 10.8978'
+  }
 };
 
 export default function RootLayout({
@@ -25,7 +42,7 @@ export default function RootLayout({
     <html lang="de" suppressHydrationWarning>
       <head>
         <Script id="schema-org" type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: JSON.stringify([{
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Mieterstrom-Check",
@@ -35,7 +52,25 @@ export default function RootLayout({
               "target": "https://mieterstrom-check.de/vergleich?we={search_term_string}",
               "query-input": "required name=search_term_string"
             }
-          })
+          }, {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Gnann Verwaltung GmbH",
+            "url": "https://mieterstrom-check.de",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+49-821-419028-40",
+              "contactType": "customer service"
+            },
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Römerweg 56",
+              "addressLocality": "Stadtbergen",
+              "postalCode": "86391",
+              "addressRegion": "Bayern",
+              "addressCountry": "DE"
+            }
+          }])
         }} />
       </head>
       <body
