@@ -41,30 +41,37 @@ export const StorageLeverageChart = () => (
 );
 
 export const ComplianceShieldGraphic = () => (
-    <div className="relative w-full max-w-md mx-auto aspect-square flex items-center justify-center p-8 bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group">
-        <div className="absolute inset-0 bg-slate-50/50"></div>
-        {/* Concentric Circles */}
-        <div className="absolute inset-4 border-2 border-dashed border-slate-200 rounded-full animate-[spin_60s_linear_infinite] group-hover:border-blue-200 transition-colors"></div>
-        <div className="absolute inset-16 border border-slate-200 bg-white rounded-full shadow-inner shadow-slate-100"></div>
-
-        {/* Central Shield */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center">
-            <div className="w-28 h-28 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl flex items-center justify-center shadow-2xl mb-6 transform rotate-45 group-hover:rotate-0 transition-transform duration-500">
-                <Shield className="text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-500 w-12 h-12" />
+    <div className="w-full bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col items-center">
+        <div className="p-8 w-full border-b border-slate-100 bg-gradient-to-b from-slate-50 to-white text-center flex flex-col items-center">
+            <div className="w-20 h-20 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mb-4 transform rotate-6 hover:rotate-0 transition-transform duration-500">
+                <Shield className="text-white w-10 h-10 transform -rotate-6 hover:rotate-0 transition-transform duration-500" />
             </div>
-            <h4 className="font-bold text-slate-900 text-xl font-heading">Haftungsdach</h4>
-            <p className="text-sm text-slate-500 max-w-[180px] mt-2">Dienstleister übernehmen alle Betreiberpflichten</p>
+            <h4 className="font-bold text-slate-900 text-2xl font-heading mb-2">Das Haftungsdach</h4>
+            <p className="text-slate-500 max-w-sm text-sm">Ein Contracting-Partner übernimmt die volle rechtliche Verantwortung als Endversorger (EVU).</p>
         </div>
 
-        {/* Satellites */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100 text-sm font-bold flex items-center gap-2 transform -translate-y-2 group-hover:-translate-y-4 transition-transform">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span> MaStR Meldung
-        </div>
-        <div className="absolute bottom-16 right-4 bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100 text-sm font-bold flex items-center gap-2 transform translate-x-2 group-hover:translate-x-4 transition-transform">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse delay-75"></span> Strom-Abrechnung
-        </div>
-        <div className="absolute bottom-16 left-4 bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100 text-sm font-bold flex items-center gap-2 transform -translate-x-2 group-hover:-translate-x-4 transition-transform">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse delay-150"></span> Messstellenbetrieb
+        <div className="w-full p-4 bg-white grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="flex flex-col items-center text-center gap-2 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shrink-0 text-sm">1</div>
+                <div>
+                    <h5 className="font-bold text-slate-800 text-sm">Meldewesen</h5>
+                    <p className="text-xs text-slate-500 mt-1">Übernahme im Marktstammdatenregister</p>
+                </div>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 transition-colors">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold shrink-0 text-sm">2</div>
+                <div>
+                    <h5 className="font-bold text-slate-800 text-sm">Abrechnung</h5>
+                    <p className="text-xs text-slate-500 mt-1">Rechnungsstellung direkt an Mieter</p>
+                </div>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-purple-50 hover:border-purple-200 transition-colors">
+                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold shrink-0 text-sm">3</div>
+                <div>
+                    <h5 className="font-bold text-slate-800 text-sm">Messung</h5>
+                    <p className="text-xs text-slate-500 mt-1">Betrieb des Smart Meter Gateways</p>
+                </div>
+            </div>
         </div>
     </div>
 );
