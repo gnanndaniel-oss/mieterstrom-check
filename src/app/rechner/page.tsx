@@ -266,14 +266,42 @@ function RechnerForm() {
                                 </div>
                             </div>
 
-                            <div className="p-6 bg-slate-100 rounded-2xl text-center space-y-4">
-                                <h3 className="font-bold text-xl">Lassen Sie dieses Projekt professionell prüfen!</h3>
-                                <p className="text-slate-600 mb-4">Wir vergleichen und finden den Dienstleister, der diese Wirtschaftlichkeit für Sie realisiert.</p>
-                                <LeadModal
-                                    rechnerDaten={formData}
-                                    buttonText="Unverbindliches Angebot anfordern"
-                                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 h-12 px-8 rounded-full font-semibold text-white shadow-md shadow-green-600/20"
-                                />
+                            <div className="mt-8 p-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10">
+                                    <CheckCircle2 className="w-48 h-48" />
+                                </div>
+                                <div className="bg-white rounded-xl p-6 md:p-8 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                    <div className="flex-1 space-y-4">
+                                        <div className="inline-flex items-center px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+                                            Top-Empfehlung für Ihr Profil
+                                        </div>
+                                        <h3 className="font-bold text-2xl text-slate-900">mieterstromjetzt.de</h3>
+
+                                        <div className="flex items-center gap-1.5 text-amber-500">
+                                            {[...Array(5)].map((_, i) => (
+                                                <svg key={i} className={`w-5 h-5 ${i === 4 ? 'opacity-50' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            ))}
+                                            <span className="font-bold text-slate-700 ml-1">4.9/5</span>
+                                            <span className="text-slate-500 text-sm ml-1">(Verifizierte Partner)</span>
+                                        </div>
+
+                                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+                                            <li className="flex items-center text-sm font-medium text-slate-700"><CheckCircle2 className="w-4 h-4 text-emerald-500 mr-2" /> Kostenlose Wirtschaftlichkeitsprüfung</li>
+                                            <li className="flex items-center text-sm font-medium text-slate-700"><CheckCircle2 className="w-4 h-4 text-emerald-500 mr-2" /> Fokus auf Batteriespeicher & Rendite</li>
+                                            <li className="flex items-center text-sm font-medium text-slate-700"><CheckCircle2 className="w-4 h-4 text-emerald-500 mr-2" /> Komplette Übernahme ("Haftungsdach")</li>
+                                        </ul>
+                                    </div>
+                                    <div className="w-full md:w-auto flex flex-col items-center">
+                                        <LeadModal
+                                            rechnerDaten={formData}
+                                            buttonText="Direkt bei mieterstromjetzt anfragen"
+                                            className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white h-14 px-8 rounded-xl font-bold transition-all shadow-xl shadow-slate-900/20 whitespace-nowrap"
+                                        />
+                                        <p className="text-xs text-slate-500 mt-3 text-center">Unverbindlich & 100% Kostenlos</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

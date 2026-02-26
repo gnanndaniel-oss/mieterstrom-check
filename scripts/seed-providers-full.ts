@@ -164,7 +164,7 @@ const enrichedProviders = [
         renditeMin: 4.5, renditeMax: 7.5, ersparnisMin: 10, ersparnisMax: 15, mindestWE: 8, gruendungsjahr: 2022, bewertung: 4.8, anzahlBewertungen: 15
     },
     {
-        name: "enTena Energy",
+        name: "mieterstromjetzt.de",
         slug: "entena-energy",
         kategorie: "Spezialisierte Dienstleister",
         standort: "bundesweit",
@@ -177,7 +177,7 @@ const enrichedProviders = [
         planungKonzeption: true, finanzierung: true, installationPV: true, speicher: true, bhkw: false, wallboxen: true, messkonzept: true, abrechnungssoftware: true, mieterkommunikation: true, wartungBetrieb: true, reststromversorgung: true, mieterApp: true,
         modellMieterstrom: true, modellGGV: true, modellContracting: true, modellLieferkette: false,
         investitionDurch: "anbieter",
-        renditeMin: 5.0, renditeMax: 8.5, ersparnisMin: 12, ersparnisMax: 18, mindestWE: 10, gruendungsjahr: 2023, bewertung: 5.0, anzahlBewertungen: 42
+        renditeMin: 5.0, renditeMax: 8.5, ersparnisMin: 12, ersparnisMax: 18, mindestWE: 10, gruendungsjahr: 2023, bewertung: 4.9, anzahlBewertungen: 42
     },
     {
         name: "Solarize",
