@@ -35,3 +35,16 @@ export async function deleteAnfrage(id: string) {
     });
     revalidatePath("/admin/anfragen");
 }
+
+export async function updateAnbieter(id: string, data: any) {
+    await prisma.anbieter.update({
+        where: { id },
+        data: {
+            ...data
+        }
+    });
+    revalidatePath("/admin/anbieter");
+    revalidatePath("/admin/anbieter/" + id);
+    revalidatePath("/vergleich");
+    revalidatePath("/anbieter/" + data.slug || "");
+}
