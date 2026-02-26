@@ -69,28 +69,30 @@ function RechnerForm() {
     const betriebskosten = 0.02 * investitionskosten; // 2% Wartung/Versicherung
     const baseRendite = ((gesamtErloes - betriebskosten) / investitionskosten) * 100;
 
-    // Realistischere Skalierung für Marketing-Zwecke:
-    // 1. Grund-Optimierung durch Annahme eines "Best Practice" Setups
-    let rendite = baseRendite * 1.8;
+    // Realistische Skalierung ohne feste Untergrenze
+    let rendite = baseRendite * 1.5;
+    rendite += formData.speicher ? 2.5 : 0;
+    rendite += formData.waermepumpe ? 1.0 : 0;
+    rendite += (formData.wallboxen * 0.1);
+    rendite += formData.we * 0.05; // Leichte Skaleneffekte
 
-    // 2. Reaktivität auf User-Eingaben für authentisches Feedback
-    rendite += formData.speicher ? 4.1 : 0.8;
-    rendite += formData.waermepumpe ? 1.7 : 0;
-    rendite += (formData.wallboxen * 0.2);
-    rendite += Math.min(3.0, formData.we * 0.15); // Skaleneffekte bei großen Häusern
+    let amortisation = 100 / Math.max(0.1, rendite); // Prevent division by zero
 
-    // 3. Weiches Abfangen nach unten (sicherstellen dass es IMMER ~ 12%+ sind) 
-    // aber mit organischer Variation (basierend auf der Dachfläche), sodass es nie "deckelt" wirkt.
-    if (rendite < 12.1) {
-        rendite = 12.1 + (formData.dachflaeche * 0.002);
-    }
+    // Ampelsystem Logik
+    const isProvider = formData.investition === "anbieter";
+    const evalRendite = isProvider ? 6.5 : rendite;
 
-    // Amortisationszeit rechnet sich logisch und physikalisch korrekt aus der neuen Rendite
-    let amortisation = 100 / rendite;
-
-    // Weiches Abfangen unter 8 Jahren
-    if (amortisation > 7.9) {
-        amortisation = 7.9 - (formData.flaeche * 0.001);
+    let ampelColor = "bg-red-500";
+    let ampelText = "Schwer wirtschaftlich";
+    let ampelTextColor = "text-red-500";
+    if (evalRendite >= 8) {
+        ampelColor = "bg-green-500";
+        ampelTextColor = "text-green-500";
+        ampelText = "Sehr lukrativ";
+    } else if (evalRendite >= 4) {
+        ampelColor = "bg-yellow-500";
+        ampelTextColor = "text-yellow-600";
+        ampelText = "Solide";
     }
 
     return (
@@ -227,21 +229,24 @@ function RechnerForm() {
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-6">
-                                <div className="bg-slate-900 text-white rounded-2xl p-6 relative overflow-hidden text-center shadow-lg">
+                                <div className="bg-slate-900 text-white rounded-2xl p-6 relative overflow-hidden text-center shadow-lg flex flex-col justify-center items-center">
                                     <div className="absolute top-0 right-0 p-4 opacity-10">
                                         <BarChart3 className="w-24 h-24" />
                                     </div>
                                     <h4 className="text-slate-400 font-medium mb-1 relative z-10">Geschätzte Rendite p.a.</h4>
-                                    <div className="text-5xl font-black text-green-400 tracking-tight relative z-10">
-                                        {formData.investition === "anbieter" ? "6.5%" : `${Math.max(0, rendite).toFixed(1)}%`}
+                                    <div className={`text-5xl font-black tracking-tight relative z-10 mb-3 ${ampelTextColor}`}>
+                                        {isProvider ? "6.5%" : `${Math.max(0, rendite).toFixed(1)}%`}
                                     </div>
-                                    <div className="text-sm text-slate-400 mt-2 relative z-10">Mit Speicherhebel-Effekt maximiert</div>
+                                    <div className="relative z-10 flex items-center justify-center gap-2">
+                                        <span className={`w-3 h-3 rounded-full ${ampelColor} shadow-sm shadow-current`}></span>
+                                        <span className="text-sm font-semibold text-white">{ampelText}</span>
+                                    </div>
                                 </div>
 
-                                <div className="bg-white border rounded-2xl p-6 text-center shadow-sm">
+                                <div className="bg-white border rounded-2xl p-6 text-center shadow-sm flex flex-col justify-center items-center">
                                     <h4 className="text-slate-500 font-medium mb-1">Amortisation in</h4>
                                     <div className="text-4xl font-bold tracking-tight text-slate-900">
-                                        {formData.investition === "anbieter" ? "Keine Invest." : `${Math.max(1, amortisation).toFixed(1)} Jahre`}
+                                        {isProvider ? "Keine Invest." : `${Math.max(1, amortisation).toFixed(1)} Jahre`}
                                     </div>
                                 </div>
                             </div>
