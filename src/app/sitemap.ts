@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.8,
         },
         {
-            url: 'https://mieterstrom-check.de/anbieter',
+            url: 'https://mieterstrom-check.de/partner',
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 0.8,

@@ -58,11 +58,7 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                                 <span className="inline-flex items-center px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-medium">
                                     <ShieldCheck className="w-4 h-4 mr-1.5" /> Verifizierter Partner
                                 </span>
-                                {anbieter.anzahlBewertungen > 0 && (
-                                    <span className="inline-flex items-center px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium">
-                                        <Star className="w-4 h-4 mr-1.5 fill-current" /> {anbieter.bewertung?.toFixed(1)} ({anbieter.anzahlBewertungen} Bewertungen)
-                                    </span>
-                                )}
+
                             </div>
                         </div>
 
@@ -176,49 +172,7 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                             </div>
                         )}
 
-                        {anbieter.bewertungen && anbieter.bewertungen.length > 0 && (
-                            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 mt-8">
-                                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-                                    <h2 className="text-2xl font-bold text-slate-900">Kundenstimmen & Erfahrungen</h2>
-                                    <div className="flex items-center">
-                                        <div className="flex text-yellow-400 mr-2">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} className={`w-5 h-5 ${i < Math.round(anbieter.bewertung || 0) ? 'fill-current' : 'text-slate-200'}`} />
-                                            ))}
-                                        </div>
-                                        <span className="font-bold text-slate-900 text-lg">{anbieter.bewertung?.toFixed(1)}</span>
-                                    </div>
-                                </div>
 
-                                <div className="space-y-6">
-                                    {anbieter.bewertungen.map((review: any) => (
-                                        <div key={review.id} className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                                            <div className="flex items-start justify-between mb-4">
-                                                <div>
-                                                    <div className="font-bold text-slate-900 flex items-center gap-2">
-                                                        {review.name}
-                                                        {review.verifiziert && (
-                                                            <span className="inline-flex items-center text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                                                                <ShieldCheck className="w-3 h-3 mr-1" /> Verifiziert
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="text-sm text-slate-500 mt-1">{new Date(review.createdAt).toLocaleDateString("de-DE")}</div>
-                                                </div>
-                                                <div className="flex text-yellow-400">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <Star key={i} className={`w-4 h-4 ${i < review.sterne ? 'fill-current' : 'text-slate-200'}`} />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            {review.kommentar && (
-                                                <p className="text-slate-600 italic">"{review.kommentar}"</p>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     <div className="space-y-6">

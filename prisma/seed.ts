@@ -483,7 +483,8 @@ Mieterstrom wird immer attraktiver. Durch das neue Solarpaket I von 2024 und die
 Mit Modellen wie dem **Contracting** können Sie als Immobilienbesitzer völlig risikofrei agieren.`,
       kategorie: 'Recht',
       autor: 'Admin',
-      veroeffentlicht: true
+      veroeffentlicht: true,
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) // 2 weeks ago
     }
   });
 
@@ -514,7 +515,8 @@ Hierbei wird nur der Solarstrom prozentual an die teilnehmenden Mieter aufgeteil
 Für Projekte unter 10 Wohneinheiten ist die GGV oft die stressfreiere Variante. Ab 10 WE oder bei Einsatz eines Contractors (wie *enTena* oder *Polarstern*) ist der echte Mieterstrom aufgrund der Förderungen finanziell attraktiver.`,
       kategorie: 'Modelle',
       autor: 'Admin',
-      veroeffentlicht: true
+      veroeffentlicht: true,
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
     }
   });
 
@@ -537,7 +539,8 @@ Da der Mieterstrom für ca. 25 bis 30 Cent an die Mieter verkauft wird, steigt d
 Insbesondere im B2B-Umfeld oder bei innovativen Partnern wie *enTena* wird der Speicher stets als zentrales Element der Wirtschaftlichkeit betrachtet.`,
       kategorie: 'Wirtschaftlichkeit',
       autor: 'Admin',
-      veroeffentlicht: true
+      veroeffentlicht: true,
+      createdAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000) // 4 weeks ago
     }
   });
 

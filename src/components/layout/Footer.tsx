@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Zap } from "lucide-react";
 
@@ -5,7 +7,7 @@ export function Footer() {
     return (
         <footer className="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-2">
                             <div className="bg-green-600 text-white p-1 rounded-md">
@@ -41,12 +43,29 @@ export function Footer() {
                     </div>
 
                     <div>
+                        <h4 className="text-white font-semibold mb-4">Für Dienstleister</h4>
+                        <ul className="space-y-2 text-sm">
+                            <li><Link href="/partner" className="hover:text-green-400 transition-colors">Partnerprogramm</Link></li>
+                        </ul>
+                    </div>
+
+                    <div>
                         <h4 className="text-white font-semibold mb-4">Rechtliches</h4>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/impressum" className="hover:text-green-400 transition-colors">Impressum</Link></li>
                             <li><Link href="/datenschutz" className="hover:text-green-400 transition-colors">Datenschutz</Link></li>
                             <li><Link href="/kontakt" className="hover:text-green-400 transition-colors">Kontakt</Link></li>
-                            <li><Link href="/anbieter" className="hover:text-green-400 transition-colors">Partnernetzwerk</Link></li>
+                            <li>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.dispatchEvent(new Event('open-cookie-settings'));
+                                    }}
+                                    className="hover:text-green-400 transition-colors text-left"
+                                >
+                                    Cookie-Einstellungen
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -2,8 +2,10 @@
 
 import { useState, Suspense, useEffect } from "react";
 import { ArrowRight, ArrowLeft, CheckCircle2, Calculator, BarChart3, Info, Home, Building2, MapPin, Zap, Coins, Lightbulb, Car, ThermometerSun, Maximize } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LeadModal } from "@/components/LeadModal";
+import { DownloadPdfModal } from "@/components/DownloadPdfModal";
 import { useSearchParams } from "next/navigation";
 import { getLocalProviders } from "@/app/actions/get-local-providers";
 
@@ -356,6 +358,19 @@ function RechnerForm() {
                                         <p className="text-xs text-slate-500 mt-3 text-center">Unverbindlich & 100% Kostenlos</p>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-4 border-t border-slate-100">
+                                <Button asChild className="flex-1 bg-white hover:bg-slate-50 text-slate-900 border-2 border-slate-200 h-14 font-semibold text-base shadow-sm">
+                                    <Link href={`/vergleich?we=${formData.we}&kategorie=${formData.investition === 'anbieter' ? 'Spezialisierte Dienstleister' : ''}&speicher=${formData.speicher ? 'on' : ''}&plz=${formData.plz}`}>
+                                        Passende Anbieter im Vergleich ansehen <ArrowRight className="w-5 h-5 ml-2" />
+                                    </Link>
+                                </Button>
+
+                                <DownloadPdfModal
+                                    rechnerDaten={formData}
+                                    className="flex-1 h-14 border-2 border-slate-200 bg-slate-50 text-slate-800 font-semibold text-base hover:bg-slate-100 shadow-sm"
+                                />
                             </div>
 
                             {localProviders.length > 0 && (

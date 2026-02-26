@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Zap, Menu, X } from "lucide-react";
+import { SearchForm } from "@/components/SearchForm";
 
 export function Header() {
     return (
@@ -22,10 +23,12 @@ export function Header() {
                     <Link href="/blog" className="text-slate-600 hover:text-green-600 transition-colors">Blog</Link>
                 </nav>
 
+                <div className="hidden md:flex flex-1 max-w-xs mx-4 lg:mx-8">
+                    <SearchForm />
+                </div>
+
                 <div className="hidden md:flex items-center gap-4">
-                    <Button asChild variant="ghost" className="hidden lg:flex text-slate-600 hover:text-green-600 hover:bg-green-50">
-                        <Link href="/anbieter">Für Anbieter</Link>
-                    </Button>
+
                     <Button asChild className="bg-green-600 hover:bg-green-700 text-white rounded-full px-6 shadow-md shadow-green-600/20">
                         <Link href="/rechner">Wirtschaftlichkeit prüfen</Link>
                     </Button>

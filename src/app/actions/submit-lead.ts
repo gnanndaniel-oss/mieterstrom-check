@@ -10,8 +10,10 @@ export async function submitLead(formData: FormData) {
     const vorname = formData.get("vorname")?.toString() || "";
     const nachname = formData.get("nachname")?.toString() || "";
     const telefon = formData.get("telefon")?.toString();
+    const firma = formData.get("firma")?.toString();
     const anzahlObjekte = formData.get("anzahlObjekte")?.toString();
     const anbieterId = formData.get("anbieterId")?.toString();
+    const newsletter = formData.get("newsletter") === "true";
     const rechnerDatenRaw = formData.get("rechnerDaten")?.toString();
 
     if (!email) {
@@ -33,8 +35,10 @@ export async function submitLead(formData: FormData) {
                 vorname,
                 nachname,
                 telefon,
+                firma,
                 anzahlObjekte,
                 anbieterId,
+                newsletter,
                 rechnerDaten: rechnerDaten as any,
                 status: "neu"
             }
@@ -51,11 +55,26 @@ export async function submitLead(formData: FormData) {
           <p><strong>Name:</strong> ${vorname} ${nachname}</p>
           <p><strong>E-Mail:</strong> ${email}</p>
           <p><strong>Telefon:</strong> ${telefon || '-'}</p>
+          <p><strong>Firma:</strong> ${firma || '-'}</p>
           <p><strong>Objekte/WE:</strong> ${anzahlObjekte || '-'}</p>
+          <p><strong>Newsletter Anfragen:</strong> ${newsletter ? 'Ja' : 'Nein'}</p>
           ${anbieterId ? `<p><strong>Interessierter Anbieter:</strong> ID ${anbieterId}</p>` : ''}
           ${rechnerDatenRaw ? `<h3>Rechner-Details:</h3><pre>${JSON.stringify(rechnerDaten, null, 2)}</pre>` : ''}
         `
             });
+        }
+
+        // 3. Handle Newsletter integration
+        if (newsletter) {
+            try {
+                await prisma.newsletterAbonnent.upsert({
+                    where: { email },
+                    update: {},
+                    create: { email, aktiv: true }
+                });
+            } catch (err) {
+                console.error("Newsletter saving error", err);
+            }
         }
 
         return { success: true, leadId: lead.id };

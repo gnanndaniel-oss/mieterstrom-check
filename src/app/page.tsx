@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import { StorageLeverageChart, ComplianceShieldGraphic } from "@/components/Infographics";
+import { LogoCarousel, FoerderTable, Fallstudien, BlogTeaser, HomeNewsletter, FAQAccordion } from "@/components/HomeExtensions";
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,16 @@ export default async function Home() {
     orderBy: {
       anzahlBewertungen: 'desc'
     }
+  });
+
+  const foerdersaetze = await prisma.foerdersatz.findMany({
+    orderBy: { anlagenGroesseVon: 'asc' }
+  });
+
+  const blogPosts = await prisma.blogPost.findMany({
+    where: { veroeffentlicht: true },
+    orderBy: { createdAt: 'desc' },
+    take: 3
   });
 
   return (
@@ -171,6 +182,13 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <LogoCarousel />
+      <FoerderTable foerdersaetze={foerdersaetze} />
+      <Fallstudien />
+      <BlogTeaser posts={blogPosts} />
+      <HomeNewsletter />
+      <FAQAccordion />
 
     </div>
   );
