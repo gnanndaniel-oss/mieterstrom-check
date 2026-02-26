@@ -54,7 +54,7 @@ export function CompareWrapper({ initialAnbieter }: { initialAnbieter: any[] }) 
                                         </div>
                                     </div>
                                     <div className="inline-flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded border border-green-100 mb-4">
-                                        <ShieldCheck className="w-3.5 h-3.5 mr-1" /> Verifizierter Partner
+                                        <ShieldCheck className="w-3.5 h-3.5 mr-1" /> Verifiziert
                                     </div>
                                     <p className="text-sm text-slate-500 mb-2">{a.standort} {(a.mindestWE ?? 0) > 0 && `• ab ${a.mindestWE} WE`}</p>
                                     {a.zielgruppe && <p className="text-xs font-semibold text-slate-600 mb-4 bg-slate-200/50 inline-block px-2 py-1 rounded">Zielgruppe: {a.zielgruppe}</p>}

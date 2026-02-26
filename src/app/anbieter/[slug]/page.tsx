@@ -56,7 +56,7 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
                                     </span>
                                 )}
                                 <span className="inline-flex items-center px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-medium">
-                                    <ShieldCheck className="w-4 h-4 mr-1.5" /> Verifizierter Partner
+                                    <ShieldCheck className="w-4 h-4 mr-1.5" /> Verifiziert
                                 </span>
 
                             </div>

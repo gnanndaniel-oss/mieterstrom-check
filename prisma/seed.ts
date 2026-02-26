@@ -467,7 +467,10 @@ async function main() {
   // Blogposts Placeholder Seed
   await prisma.blogPost.upsert({
     where: { slug: 'mieterstrom-2025-2026' },
-    update: {},
+    update: {
+      titelbild: '/blog/mieterstrom_2026.png',
+      createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000)
+    },
     create: {
       slug: 'mieterstrom-2025-2026',
       titel: 'Mieterstrom 2025/2026: Der komplette Leitfaden für Vermieter',
@@ -485,13 +488,16 @@ Mit Modellen wie dem **Contracting** können Sie als Immobilienbesitzer völlig 
       autor: 'Admin',
       veroeffentlicht: true,
       titelbild: '/blog/mieterstrom_2026.png',
-      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) // 2 weeks ago
+      createdAt: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000) // 1.5 months ago
     }
   });
 
   await prisma.blogPost.upsert({
     where: { slug: 'gebaeudeversorgung-vs-mieterstrom' },
-    update: {},
+    update: {
+      titelbild: '/blog/ggv_vs_mieterstrom.png',
+      createdAt: new Date(Date.now() - 160 * 24 * 60 * 60 * 1000)
+    },
     create: {
       slug: 'gebaeudeversorgung-vs-mieterstrom',
       titel: 'Gebäudeversorgung (GGV) oder echter Mieterstrom?',
@@ -518,13 +524,16 @@ Für Projekte unter 10 Wohneinheiten ist die GGV oft die stressfreiere Variante.
       autor: 'Admin',
       veroeffentlicht: true,
       titelbild: '/blog/ggv_vs_mieterstrom.png',
-      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
+      createdAt: new Date(Date.now() - 160 * 24 * 60 * 60 * 1000) // ~5.5 months ago
     }
   });
 
   await prisma.blogPost.upsert({
     where: { slug: 'storage-leverage-mieterstrom' },
-    update: {},
+    update: {
+      titelbild: '/blog/storage_leverage.png',
+      createdAt: new Date(Date.now() - 100 * 24 * 60 * 60 * 1000)
+    },
     create: {
       slug: 'storage-leverage-mieterstrom',
       titel: 'Der Storage-Leverage: Warum sich Mieterstrom nur mit Batterie lohnt!',
@@ -543,7 +552,7 @@ Insbesondere im B2B-Umfeld oder bei innovativen Partnern wie *enTena* wird der S
       autor: 'Admin',
       veroeffentlicht: true,
       titelbild: '/blog/storage_leverage.png',
-      createdAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000) // 4 weeks ago
+      createdAt: new Date(Date.now() - 100 * 24 * 60 * 60 * 1000) // ~3.5 months ago
     }
   });
 

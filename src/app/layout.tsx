@@ -21,6 +21,20 @@ export const metadata: Metadata = {
     title: 'Das Vergleichsportal für Mieterstrom & GGV | mieterstrom-check.de',
     description: 'Finden Sie den perfekten Mieterstrom-Contracting Partner für Ihr Mehrfamilienhaus.',
     siteName: 'mieterstrom-check.de',
+    images: [
+      {
+        url: '/blog/mieterstrom_2026.png',
+        width: 1200,
+        height: 630,
+        alt: 'Mieterstrom-Anbieter vergleichen',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Das Vergleichsportal für Mieterstrom & GGV | mieterstrom-check.de',
+    description: 'Finden Sie den perfekten Mieterstrom-Contracting Partner für Ihr Mehrfamilienhaus.',
+    images: ['/blog/mieterstrom_2026.png'],
   },
   alternates: {
     canonical: '/',
