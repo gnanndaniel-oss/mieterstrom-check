@@ -196,7 +196,7 @@ function RechnerForm() {
                                                 Warum ein Speicher wichtig ist <ArrowRight className="w-3 h-3 ml-1" />
                                             </a>
                                         </div>
-                                        <input type="checkbox" className="w-5 h-5 flex-shrink-0 ml-4 cursor-pointer" checked={formData.speicher} onChange={e => setFormData({ ...formData, speicher: e.target.checked })} />
+                                        <input type="checkbox" className="w-5 h-5 flex-shrink-0 ml-4 cursor-pointer" checked={formData.speicher} onChange={e => setFormData({ ...formData, speicher: e.target.checked, ...(e.target.checked ? { speicherKwh: Math.max(5, Math.ceil(anlagenLeistung_kWp)) } : {}) })} />
                                     </label>
                                 </div>
                                 {formData.speicher && (
