@@ -484,6 +484,7 @@ Mit Modellen wie dem **Contracting** können Sie als Immobilienbesitzer völlig 
       kategorie: 'Recht',
       autor: 'Admin',
       veroeffentlicht: true,
+      titelbild: '/blog/mieterstrom_2026.png',
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) // 2 weeks ago
     }
   });
@@ -516,6 +517,7 @@ Für Projekte unter 10 Wohneinheiten ist die GGV oft die stressfreiere Variante.
       kategorie: 'Modelle',
       autor: 'Admin',
       veroeffentlicht: true,
+      titelbild: '/blog/ggv_vs_mieterstrom.png',
       createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
     }
   });
@@ -540,6 +542,7 @@ Insbesondere im B2B-Umfeld oder bei innovativen Partnern wie *enTena* wird der S
       kategorie: 'Wirtschaftlichkeit',
       autor: 'Admin',
       veroeffentlicht: true,
+      titelbild: '/blog/storage_leverage.png',
       createdAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000) // 4 weeks ago
     }
   });
