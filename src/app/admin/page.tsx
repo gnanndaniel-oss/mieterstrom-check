@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { ShieldAlert, Users, Plus, FileText, Settings, Database } from "lucide-react";
+import { Users, FileText, Settings, Database, ArrowRight } from "lucide-react";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,125 +11,72 @@ export default async function AdminDashboard() {
 
     const leads = await prisma.lead.findMany({
         orderBy: { createdAt: 'desc' },
-        take: 10
-    });
-
-    const anfragen = await prisma.kontaktAnfrage.findMany({
-        orderBy: { createdAt: 'desc' },
-        take: 10
+        take: 5
     });
 
     return (
-        <div className="bg-slate-100 min-h-screen">
-            <div className="bg-slate-900 py-6 text-white border-b border-slate-800">
-                <div className="container mx-auto px-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <ShieldAlert className="w-5 h-5 text-green-400" />
-                        <h1 className="text-xl font-bold">Admin-Bereich</h1>
-                    </div>
-                    <div className="text-sm text-slate-400">
-                        Eingeloggt als Admin
-                    </div>
+        <div className="p-8">
+            <h1 className="text-3xl font-bold mb-8 text-slate-900">Willkommen im Dashboard, Admin!</h1>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> Generierte Leads</h3>
+                    <div className="text-4xl font-black text-slate-900 mb-2">{leadsCount}</div>
+                    <Link href="/admin/leads" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center group">Alle ansehen <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" /></Link>
+                </div>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><Database className="w-4 h-4" /> Gelistete Anbieter</h3>
+                    <div className="text-4xl font-black text-slate-900 mb-2">{anbieterCount}</div>
+                    <Link href="/admin/anbieter" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center group">Verwalten <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" /></Link>
+                </div>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><FileText className="w-4 h-4" /> Blogartikel Online</h3>
+                    <div className="text-4xl font-black text-slate-900 mb-2">3</div>
+                </div>
+                <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl shadow-sm border border-slate-800 text-white">
+                    <h3 className="text-slate-400 font-medium mb-2 flex items-center gap-2"><Settings className="w-4 h-4" /> Mieterstromzuschlag</h3>
+                    <div className="text-3xl font-bold text-emerald-400">2.59 ct<span className="text-sm text-slate-400 font-normal">/kWh</span></div>
+                    <p className="text-xs text-slate-400 mt-2">Maximalsatz (&le; 10 kWp)</p>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-12">
-                <h2 className="text-3xl font-bold mb-8 text-slate-900">Dashboard</h2>
-
-                <div className="grid md:grid-cols-4 gap-6 mb-12">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> Neue Leads</h3>
-                        <div className="text-4xl font-bold text-slate-900">{leadsCount}</div>
-                        <div className="text-xs text-green-600 mt-2 font-medium bg-green-50 inline-block px-2 py-1 rounded">+3 diese Woche</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><Database className="w-4 h-4" /> Gelistete Anbieter</h3>
-                        <div className="text-4xl font-bold text-slate-900">{anbieterCount}</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><FileText className="w-4 h-4" /> Blogartikel</h3>
-                        <div className="text-4xl font-bold text-slate-900">1</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="text-slate-500 font-medium mb-2 flex items-center gap-2"><Settings className="w-4 h-4" /> Fördersätze (Aktuell)</h3>
-                        <div className="text-xl font-bold text-green-600">2.59 ct/kWh</div>
-                        <p className="text-xs text-slate-400 mt-1">Bis 10 kWp (Stand 2025/2026)</p>
-                    </div>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b">
+                    <h2 className="text-xl font-bold">Die neuesten Leads</h2>
+                    <Button variant="outline" size="sm" asChild>
+                        <Link href="/admin/leads">Alle Leads öffnen</Link>
+                    </Button>
                 </div>
-
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                    <div className="flex items-center justify-between mb-8 pb-4 border-b">
-                        <h3 className="text-xl font-bold">Zuletzt eingegangene Leads</h3>
-                    </div>
-                    {leads.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b">
-                                    <tr>
-                                        <th className="px-4 py-3">Datum</th>
-                                        <th className="px-4 py-3">Name</th>
-                                        <th className="px-4 py-3">Kontakt</th>
-                                        <th className="px-4 py-3">Einheiten</th>
-                                        <th className="px-4 py-3">Status</th>
-                                        <th className="px-4 py-3">Details</th>
+                {leads.length > 0 ? (
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left whitespace-nowrap">
+                            <thead className="text-xs text-slate-500 uppercase bg-slate-50">
+                                <tr>
+                                    <th className="px-4 py-3 rounded-tl-lg">Datum</th>
+                                    <th className="px-4 py-3">Name</th>
+                                    <th className="px-4 py-3">E-Mail</th>
+                                    <th className="px-4 py-3 rounded-tr-lg">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {leads.map((lead: any) => (
+                                    <tr key={lead.id} className="border-b last:border-0 hover:bg-slate-50/50">
+                                        <td className="px-4 py-4 text-slate-600">{new Date(lead.createdAt).toLocaleDateString("de-DE", { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</td>
+                                        <td className="px-4 py-4 font-bold text-slate-900">{lead.vorname} {lead.nachname}</td>
+                                        <td className="px-4 py-4 text-emerald-600 font-medium">{lead.email}</td>
+                                        <td className="px-4 py-4">
+                                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${lead.status === 'neu' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                                                {lead.status}
+                                            </span>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {leads.map((lead: any) => (
-                                        <tr key={lead.id} className="border-b hover:bg-slate-50">
-                                            <td className="px-4 py-3 text-slate-600">{new Date(lead.createdAt).toLocaleDateString("de-DE")}</td>
-                                            <td className="px-4 py-3 font-medium text-slate-900">{lead.vorname} {lead.nachname}</td>
-                                            <td className="px-4 py-3 text-slate-600">{lead.email}<br /><span className="text-xs">{lead.telefon || '-'}</span></td>
-                                            <td className="px-4 py-3 text-slate-600">{lead.anzahlObjekte || '-'}</td>
-                                            <td className="px-4 py-3">
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${lead.status === 'neu' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700'}`}>
-                                                    {lead.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-3 text-slate-500 text-xs">
-                                                {lead.anbieterId ? `Anbieter ID: ${lead.anbieterId}` : '-'}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p className="text-slate-500 text-sm">Bisher keine Leads vorhanden.</p>
-                    )}
-                </div>
-
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mt-8">
-                    <div className="flex items-center justify-between mb-8 pb-4 border-b">
-                        <h3 className="text-xl font-bold">Zuletzt eingegangene Partner-Bewerbungen</h3>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                    {anfragen.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b">
-                                    <tr>
-                                        <th className="px-4 py-3">Datum</th>
-                                        <th className="px-4 py-3">Name / Firma</th>
-                                        <th className="px-4 py-3">E-Mail</th>
-                                        <th className="px-4 py-3">Nachricht</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {anfragen.map((anfrage: any) => (
-                                        <tr key={anfrage.id} className="border-b hover:bg-slate-50">
-                                            <td className="px-4 py-3 text-slate-600">{new Date(anfrage.createdAt).toLocaleDateString("de-DE")}</td>
-                                            <td className="px-4 py-3 font-medium text-slate-900">{anfrage.name}</td>
-                                            <td className="px-4 py-3 text-slate-600">{anfrage.email}</td>
-                                            <td className="px-4 py-3 text-slate-500 text-xs whitespace-pre-wrap">{anfrage.nachricht}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p className="text-slate-500 text-sm">Bisher keine Partner-Bewerbungen vorhanden.</p>
-                    )}
-                </div>
+                ) : (
+                    <div className="text-center py-12 text-slate-500">Noch keine Leads vorhanden.</div>
+                )}
             </div>
         </div>
     );
