@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { ArrowRight, ArrowLeft, CheckCircle2, Calculator, BarChart3, Info } from "lucide-react";
+import { useState, Suspense, useEffect } from "react";
+import { ArrowRight, ArrowLeft, CheckCircle2, Calculator, BarChart3, Info, Home, Building2, MapPin, Zap, Coins, Lightbulb, Car, ThermometerSun, Maximize } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LeadModal } from "@/components/LeadModal";
 import { useSearchParams } from "next/navigation";
+import { getLocalProviders } from "@/app/actions/get-local-providers";
 
 export default function RechnerPage() {
     return (
@@ -17,6 +18,7 @@ export default function RechnerPage() {
 function RechnerForm() {
     const searchParams = useSearchParams();
     const [step, setStep] = useState(1);
+    const [localProviders, setLocalProviders] = useState<any[]>([]);
     const initialWe = parseInt(searchParams.get("we") || "10", 10);
     const [formData, setFormData] = useState({
         // Step 1
@@ -42,6 +44,12 @@ function RechnerForm() {
 
     const handleNext = () => setStep(s => Math.min(4, s + 1));
     const handleBack = () => setStep(s => Math.max(1, s - 1));
+
+    useEffect(() => {
+        if (step === 4) {
+            getLocalProviders(formData.plz).then(res => setLocalProviders(res));
+        }
+    }, [step, formData.plz]);
 
     // calculation logic
     const anlagenLeistung_kWp = formData.dachflaeche * 0.15;
@@ -123,28 +131,47 @@ function RechnerForm() {
                         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <h2 className="text-2xl font-bold border-b pb-4">1. Gebäudedaten</h2>
                             <div className="grid md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Anzahl Wohneinheiten</label>
-                                    <input type="number" min="2" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.we} onChange={e => setFormData({ ...formData, we: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Home className="w-4 h-4 text-emerald-500" /> Anzahl Wohneinheiten
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" min="2" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-12 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.we} onChange={e => setFormData({ ...formData, we: Number(e.target.value) })} />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">WE</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Wohnfläche pro Einheit (m²)</label>
-                                    <input type="number" min="20" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.flaeche} onChange={e => setFormData({ ...formData, flaeche: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Maximize className="w-4 h-4 text-emerald-500" /> Wohnfläche pro Einheit
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" min="20" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-12 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.flaeche} onChange={e => setFormData({ ...formData, flaeche: Number(e.target.value) })} />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">m²</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Dachfläche (m²)</label>
-                                    <input type="number" min="50" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.dachflaeche} onChange={e => setFormData({ ...formData, dachflaeche: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Lightbulb className="w-4 h-4 text-emerald-500" /> Dachfläche
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" min="50" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-12 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.dachflaeche} onChange={e => setFormData({ ...formData, dachflaeche: Number(e.target.value) })} />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">m²</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Gebäudetyp</label>
-                                    <select className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.typ} onChange={e => setFormData({ ...formData, typ: e.target.value })}>
-                                        <option value="bestand">Bestand</option>
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Building2 className="w-4 h-4 text-emerald-500" /> Gebäudetyp
+                                    </label>
+                                    <select className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900 appearance-none" value={formData.typ} onChange={e => setFormData({ ...formData, typ: e.target.value })}>
+                                        <option value="bestand">Bestandsgebäude</option>
                                         <option value="neubau">Neubau</option>
                                     </select>
                                 </div>
-                                <div className="space-y-2 md:col-span-2">
-                                    <label className="text-sm font-semibold">Postleitzahl</label>
-                                    <input type="text" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" placeholder="10115" value={formData.plz} onChange={e => setFormData({ ...formData, plz: e.target.value })} />
+                                <div className="space-y-3 group md:col-span-2">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <MapPin className="w-4 h-4 text-emerald-500" /> Postleitzahl
+                                    </label>
+                                    <input type="text" className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" placeholder="Ihre Postleitzahl für lokale Regionen" value={formData.plz} onChange={e => setFormData({ ...formData, plz: e.target.value })} />
                                 </div>
                             </div>
                         </div>
@@ -154,26 +181,53 @@ function RechnerForm() {
                         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <h2 className="text-2xl font-bold border-b pb-4">2. Verbrauchsdaten</h2>
                             <div className="grid md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Verbrauch pro WE (kWh/Jahr)</label>
-                                    <input type="number" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.verbrauchWe} onChange={e => setFormData({ ...formData, verbrauchWe: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Zap className="w-4 h-4 text-emerald-500" /> Verbrauch pro WE
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-24 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.verbrauchWe} onChange={e => setFormData({ ...formData, verbrauchWe: Number(e.target.value) })} />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">kWh/Jahr</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Aktueller Strompreis (ct/kWh)</label>
-                                    <input type="number" step="0.1" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.strompreis} onChange={e => setFormData({ ...formData, strompreis: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Coins className="w-4 h-4 text-emerald-500" /> Aktueller Strompreis
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" step="0.1" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-20 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.strompreis} onChange={e => setFormData({ ...formData, strompreis: Number(e.target.value) })} />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">ct/kWh</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Allgemeinstrom (kWh/Jahr)</label>
-                                    <input type="number" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.allgemeinstrom} onChange={e => setFormData({ ...formData, allgemeinstrom: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Zap className="w-4 h-4 text-emerald-500" /> Allgemeinstrom
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-24 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.allgemeinstrom} onChange={e => setFormData({ ...formData, allgemeinstrom: Number(e.target.value) })} />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">kWh/Jahr</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Anzahl Wallboxen</label>
-                                    <input type="number" min="0" className="w-full border p-3 rounded-lg focus:ring-2 outline-none" value={formData.wallboxen} onChange={e => setFormData({ ...formData, wallboxen: Number(e.target.value) })} />
+                                <div className="space-y-3 group">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <Car className="w-4 h-4 text-emerald-500" /> Anzahl Wallboxen
+                                    </label>
+                                    <div className="relative">
+                                        <input type="number" min="0" className="w-full bg-slate-50 border-2 border-slate-200 p-4 pl-4 pr-16 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all text-lg font-bold text-slate-900" value={formData.wallboxen} onChange={e => setFormData({ ...formData, wallboxen: Number(e.target.value) })} />
+                                    </div>
                                 </div>
                                 <div className="space-y-4 md:col-span-2 mt-2">
-                                    <label className="flex items-center gap-3 cursor-pointer p-4 border rounded-xl hover:bg-slate-50 transition-colors">
-                                        <input type="checkbox" className="w-5 h-5" checked={formData.waermepumpe} onChange={e => setFormData({ ...formData, waermepumpe: e.target.checked })} />
-                                        <span className="font-semibold">Zentrale Wärmepumpe vorhanden</span>
+                                    <label className={`flex items-center gap-4 cursor-pointer p-6 border-2 rounded-xl transition-all ${formData.waermepumpe ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-emerald-200 bg-slate-50 hover:bg-slate-50/80'}`}>
+                                        <ThermometerSun className={`w-8 h-8 ${formData.waermepumpe ? 'text-emerald-600' : 'text-slate-400'}`} />
+                                        <div className="flex flex-col flex-1">
+                                            <span className="font-bold text-slate-900">Zentrale Wärmepumpe vorhanden</span>
+                                            <span className="text-sm text-slate-500">Erfordert ca. 5000 kWh extra pro Jahr</span>
+                                        </div>
+                                        <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${formData.waermepumpe ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-white'}`}>
+                                            {formData.waermepumpe && <CheckCircle2 className="w-4 h-4 text-white" />}
+                                        </div>
+                                        {/* Hidden real checkbox */}
+                                        <input type="checkbox" className="hidden" checked={formData.waermepumpe} onChange={e => setFormData({ ...formData, waermepumpe: e.target.checked })} />
                                     </label>
                                 </div>
                             </div>
@@ -303,6 +357,36 @@ function RechnerForm() {
                                     </div>
                                 </div>
                             </div>
+
+                            {localProviders.length > 0 && (
+                                <div className="mt-8 pt-8 border-t border-slate-100">
+                                    <h3 className="font-bold text-lg mb-4 text-slate-900 flex items-center gap-2">
+                                        <MapPin className="w-5 h-5 text-emerald-500" />
+                                        Weitere regionale Anbieter nahe {formData.plz || "Ihnen"}
+                                    </h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        {localProviders.map(p => (
+                                            <div key={p.slug} className="p-4 rounded-xl border-2 border-slate-100 bg-white hover:border-emerald-200 transition-all flex flex-col justify-between h-full group">
+                                                <div>
+                                                    <h4 className="font-bold text-slate-800 mb-1">{p.name}</h4>
+                                                    <p className="text-sm text-slate-500 leading-tight mb-3 line-clamp-2">{p.kurzBeschreibung}</p>
+                                                    <div className="flex flex-wrap gap-1.5 mb-4">
+                                                        {p.speicher && <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs font-semibold">Speicher</span>}
+                                                        {p.modellContracting && <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs font-semibold">Contracting</span>}
+                                                        {p.standort && <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-semibold">{p.standort.split(" ")[0]}</span>}
+                                                    </div>
+                                                </div>
+                                                <LeadModal
+                                                    anbieterId={p.slug}
+                                                    buttonText={`${p.name} anfragen`}
+                                                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 border-none font-semibold text-sm h-10 group-hover:bg-emerald-50 group-hover:text-emerald-700 transition-colors"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
                     )}
                 </div>
