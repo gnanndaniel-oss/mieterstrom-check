@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# mieterstrom-check.de
 
-## Getting Started
+Next.js 16 (App Router) + Prisma + Neon Postgres. Hosting auf Vercel, Mail über hostone (Plesk).
 
-First, run the development server:
+## Setup
 
 ```bash
+npm install
+cp .env.example .env   # Werte ausfüllen
+npx prisma generate
+npx prisma db push     # Schema auf die DB anwenden
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Formulare & E-Mail-Versand
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Alle drei Formulare laufen über Server Actions (`src/app/actions/`):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Formular | Action | Speichert in | Mail an |
+|---|---|---|---|
+| Lead-Modal | `submitLead` | `Lead` | `ADMIN_EMAIL` |
+| PDF-Download | `submitLead` | `Lead` (Flag `isPdfDownload`) | `ADMIN_EMAIL` |
+| Partner-Bewerbung | `submitProviderApplication` | `KontaktAnfrage` | `ADMIN_EMAIL` |
 
-## Learn More
+Newsletter läuft mit **Double-Opt-In**: Nach Anmeldung wird ein Bestätigungs-Token per Mail verschickt. Erst nach Klick auf den Link in `/newsletter/bestaetigen?token=…` wird `bestaetigt = true` und `aktiv = true`.
 
-To learn more about Next.js, take a look at the following resources:
+Spamschutz: jedes Formular hat ein verstecktes Honeypot-Feld `website_url`. Wird es gefüllt, antwortet die Action mit `success: true` ohne zu speichern oder zu mailen.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Mail-Architektur
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Versand**: nodemailer → SMTP an `mail.arfida.de:587` (STARTTLS, SASL-Auth) — verifizierte Absender unter `mieterstrom-check.de`
+- **Empfang**: Postfach `admin@mieterstrom-check.de` auf hostone, Aliase `leads@/partner@/newsletter@` leiten dorthin weiter
+- **Service-User für SMTP-Auth**: `noreply@mieterstrom-check.de`
 
-## Deploy on Vercel
+## DNS-Records bei ns14.net
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+MX     @                    10 mail.arfida.de.
+TXT    @                    v=spf1 mx -all
+TXT    _dmarc               v=DMARC1; p=quarantine; rua=mailto:postmaster@arfida.de; fo=1; adkim=r; aspf=r
+TXT    default._domainkey   v=DKIM1; k=rsa; p=<aus Plesk>
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+A-Record bleibt unverändert (zeigt auf Vercel).
+
+## Vercel Environment Variables
+
+Im Vercel-Projekt unter **Settings → Environment Variables** alle Werte aus `.env.example` setzen. Insbesondere:
+
+- `SMTP_HOST=mail.arfida.de`
+- `SMTP_PORT=587`
+- `SMTP_USER=noreply@mieterstrom-check.de`
+- `SMTP_PASS=<Passwort>`
+- `ADMIN_EMAIL=admin@mieterstrom-check.de`
+- `MAIL_FROM_LEADS / _PARTNER / _NEWSLETTER`
+- `NEXT_PUBLIC_SITE_URL=https://mieterstrom-check.de` (sonst zeigt der Newsletter-Bestätigungslink auf localhost)
+
+## Datenmodell
+
+Siehe `prisma/schema.prisma`. Wichtigste Modelle: `Anbieter`, `Lead`, `KontaktAnfrage`, `NewsletterAbonnent`, `BlogPost`.
+
+## Deploy
+
+Auf jedes Push auf `main` deployt Vercel automatisch. Vor dem ersten Deploy nach Schema-Änderungen:
+
+```bash
+npx prisma db push
+```

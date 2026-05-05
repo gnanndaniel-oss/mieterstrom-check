@@ -65,6 +65,14 @@ export function LeadModal({ buttonText = "Angebot anfordern", className, variant
                             </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                            <input
+                                type="text"
+                                name="website_url"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                aria-hidden="true"
+                                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                            />
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label htmlFor="vorname" className="text-sm font-medium">Vorname</label>

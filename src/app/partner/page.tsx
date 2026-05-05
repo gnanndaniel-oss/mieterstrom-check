@@ -75,6 +75,14 @@ export default function AnbieterLandingPage() {
                                 {errorMsg && <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">{errorMsg}</div>}
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
+                                    <input
+                                        type="text"
+                                        name="website_url"
+                                        tabIndex={-1}
+                                        autoComplete="off"
+                                        aria-hidden="true"
+                                        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                                    />
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-slate-300">Unternehmensname *</label>
                                         <input name="firma" required className="w-full bg-slate-900/50 border border-slate-700/50 outline-none rounded-xl h-12 px-4 focus:ring-2 focus:ring-green-500 text-white placeholder:text-slate-500" placeholder="Max Muster Energy GmbH" />

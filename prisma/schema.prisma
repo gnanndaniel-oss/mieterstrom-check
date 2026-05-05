@@ -160,8 +160,12 @@ model KontaktAnfrage {
 }
 
 model NewsletterAbonnent {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  aktiv     Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id              String    @id @default(cuid())
+  email           String    @unique
+  aktiv           Boolean   @default(false)
+  bestaetigt      Boolean   @default(false)
+  bestaetigtAm    DateTime?
+  bestaetigToken  String?   @unique
+  tokenAblauf     DateTime?
+  createdAt       DateTime  @default(now())
 }
