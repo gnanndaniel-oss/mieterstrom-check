@@ -2,10 +2,28 @@ import Link from "next/link";
 import { ArrowLeft, BatteryCharging, Zap, Euro, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StorageLeverageChart, ComplianceShieldGraphic, PartnerSynergyGraphic } from "@/components/Infographics";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLdString } from "@/lib/structured-data";
+
+export const metadata = pageMetadata({
+    title: "Warum Batteriespeicher? | Eigenverbrauchsquote steigern | Guide",
+    description:
+        "Wie Batteriespeicher die Eigenverbrauchsquote bei Mieterstrom-Projekten verdoppeln, Renditen heben und Compliance-Risiken senken – mit konkreten Auslegungs-Tipps.",
+    path: "/mieterstrom-guide/warum-speicher",
+    keywords: ["Batteriespeicher", "Eigenverbrauchsquote", "PV Speicher Mehrfamilienhaus", "Mieterstrom Speicher"],
+});
 
 export default function WarumSpeicherPage() {
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Mieterstrom-Guide", path: "/mieterstrom-guide" },
+            { name: "Warum Speicher?", path: "/mieterstrom-guide/warum-speicher" },
+        ]),
+    );
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             {/* Header */}
             <div className="bg-slate-900 py-16 text-white border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-4xl pt-8">

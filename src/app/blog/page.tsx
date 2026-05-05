@@ -1,8 +1,18 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { ArrowRight, Calendar, BookOpen } from "lucide-react";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, itemListSchema, jsonLdString } from "@/lib/structured-data";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata = pageMetadata({
+    title: "Mieterstrom-Wissen & Aktuelles | Blog | mieterstrom-check.de",
+    description:
+        "Tiefgehende Analysen, rechtliche Updates und Experten-Tipps rund um Photovoltaik, Mieterstrom und Gebäudeversorgung in Deutschland.",
+    path: "/blog",
+    keywords: ["Mieterstrom Blog", "Photovoltaik News", "Mieterstrom Recht", "PV-Förderung 2026"],
+});
 
 export default async function BlogOverview() {
     const posts = await prisma.blogPost.findMany({
@@ -10,8 +20,20 @@ export default async function BlogOverview() {
         orderBy: { createdAt: 'desc' }
     });
 
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Blog", path: "/blog" },
+        ]),
+        itemListSchema(
+            posts.map((p) => ({ name: p.titel, path: `/blog/${p.slug}` })),
+            "Mieterstrom-Check Blog",
+        ),
+    );
+
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 py-20 text-white mb-16 border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-5xl text-center">
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">

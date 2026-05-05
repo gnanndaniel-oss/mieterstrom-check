@@ -1,10 +1,28 @@
 import Link from "next/link";
 import { ArrowLeft, Calculator, Coins, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLdString } from "@/lib/structured-data";
+
+export const metadata = pageMetadata({
+    title: "Mieterstrom-Förderung & Zuschläge 2026 | Guide",
+    description:
+        "Mieterstromzuschlag, KfW-Förderung und EEG-Vergütung 2026: Welche Zuschüsse gibt es für PV-Mieterstrom in Mehrfamilienhäusern und wie kombinieren Sie sie wirtschaftlich?",
+    path: "/mieterstrom-guide/foerderung",
+    keywords: ["Mieterstromzuschlag", "KfW Förderung Mieterstrom", "EEG 2023", "PV Förderung Mehrfamilienhaus"],
+});
 
 export default function GuideFoerderungPage() {
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Mieterstrom-Guide", path: "/mieterstrom-guide" },
+            { name: "Förderung", path: "/mieterstrom-guide/foerderung" },
+        ]),
+    );
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 py-16 text-white border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-4xl pt-8">
                     <Link href="/mieterstrom-guide" className="inline-flex items-center text-slate-400 hover:text-white font-medium mb-8 text-sm transition-colors">

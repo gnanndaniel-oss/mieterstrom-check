@@ -1,8 +1,52 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft, Calendar } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { pageMetadata } from "@/lib/seo";
+import { articleSchema, breadcrumbSchema, jsonLdString } from "@/lib/structured-data";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const post = await prisma.blogPost.findUnique({
+        where: { slug },
+        select: {
+            slug: true,
+            titel: true,
+            excerpt: true,
+            metaTitle: true,
+            metaDescription: true,
+            titelbild: true,
+            kategorie: true,
+            tags: true,
+            createdAt: true,
+            updatedAt: true,
+        },
+    });
+    if (!post) {
+        return pageMetadata({
+            title: "Artikel nicht gefunden",
+            description: "Dieser Blogartikel ist nicht verfügbar.",
+            path: `/blog/${slug}`,
+            noindex: true,
+        });
+    }
+    return pageMetadata({
+        title: post.metaTitle || `${post.titel} | Mieterstrom-Check Blog`,
+        description: post.metaDescription || post.excerpt || `${post.titel} – Aktueller Beitrag aus dem Mieterstrom-Check Blog.`,
+        path: `/blog/${post.slug}`,
+        type: "article",
+        image: post.titelbild || undefined,
+        keywords: post.tags ? post.tags.split(",").map((t) => t.trim()) : undefined,
+        publishedTime: post.createdAt.toISOString(),
+        modifiedTime: post.updatedAt.toISOString(),
+    });
+}
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -14,8 +58,28 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         return <div className="p-20 text-center text-xl">Artikel nicht gefunden</div>;
     }
 
+    const ld = jsonLdString(
+        articleSchema({
+            headline: post.titel,
+            description: post.excerpt || undefined,
+            slug: post.slug,
+            image: post.titelbild,
+            author: post.autor,
+            category: post.kategorie,
+            keywords: post.tags,
+            publishedAt: post.createdAt,
+            modifiedAt: post.updatedAt,
+        }),
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.titel, path: `/blog/${post.slug}` },
+        ]),
+    );
+
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 pt-20 pb-16 text-white border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-3xl">
                     <Link href="/mieterstrom-guide" className="inline-flex items-center text-green-400 hover:text-green-300 font-medium mb-8 text-sm transition-colors">

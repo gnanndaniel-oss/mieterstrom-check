@@ -1,10 +1,28 @@
 import Link from "next/link";
 import { ArrowLeft, Scale, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLdString } from "@/lib/structured-data";
+
+export const metadata = pageMetadata({
+    title: "Mieterstrom-Recht 2026 | Pflichten & Verträge | Guide",
+    description:
+        "Rechtsrahmen für Mieterstrom: §42a EnWG, Belieferungsvertrag, Lieferantenwechsel, Pflichten gegenüber Mietern und BNetzA-Anforderungen kompakt erklärt.",
+    path: "/mieterstrom-guide/recht",
+    keywords: ["Mieterstrom Recht", "§42a EnWG", "Mieterstromvertrag", "BNetzA Pflichten"],
+});
 
 export default function GuideRechtPage() {
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Mieterstrom-Guide", path: "/mieterstrom-guide" },
+            { name: "Recht", path: "/mieterstrom-guide/recht" },
+        ]),
+    );
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 py-16 text-white border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-4xl pt-8">
                     <Link href="/mieterstrom-guide" className="inline-flex items-center text-slate-400 hover:text-white font-medium mb-8 text-sm transition-colors">

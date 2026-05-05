@@ -1,9 +1,43 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { CheckCircle2, XCircle, Building2, Battery, Cpu, Activity, Zap, Euro, Star, ShieldCheck } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { LeadModal } from "@/components/LeadModal";
+import { pageMetadata } from "@/lib/seo";
+import {
+    breadcrumbSchema,
+    jsonLdString,
+    providerServiceSchema,
+} from "@/lib/structured-data";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const anbieter = await prisma.anbieter.findUnique({
+        where: { slug },
+        select: { name: true, kurzBeschreibung: true, metaTitle: true, metaDescription: true, slug: true },
+    });
+    if (!anbieter) {
+        return pageMetadata({
+            title: "Anbieter nicht gefunden",
+            description: "Dieser Mieterstrom-Anbieter ist nicht verfügbar.",
+            path: `/anbieter/${slug}`,
+            noindex: true,
+        });
+    }
+    return pageMetadata({
+        title: anbieter.metaTitle || `${anbieter.name} – Mieterstrom-Anbieter im Profil`,
+        description:
+            anbieter.metaDescription ||
+            `${anbieter.name}: Leistungen, Konditionen und Referenzen für Mieterstrom & Gebäudeversorgung. Unverbindlich Angebot anfordern.`,
+        path: `/anbieter/${anbieter.slug}`,
+    });
+}
 
 export default async function AnbieterDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -20,8 +54,18 @@ export default async function AnbieterDetail({ params }: { params: Promise<{ slu
         notFound();
     }
 
+    const ld = jsonLdString(
+        providerServiceSchema(anbieter),
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Vergleich", path: "/vergleich" },
+            { name: anbieter.name, path: `/anbieter/${anbieter.slug}` },
+        ]),
+    );
+
     return (
         <div className="bg-slate-50 min-h-screen pb-24">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             {/* Hero */}
             <div className="bg-slate-900 text-white pt-20 pb-24 border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-5xl">
