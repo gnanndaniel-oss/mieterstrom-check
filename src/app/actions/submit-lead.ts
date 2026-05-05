@@ -1,12 +1,26 @@
 "use server";
 
+import { randomBytes } from "crypto";
 import prisma from "@/lib/prisma";
-import { Resend } from "resend";
+import {
+    MAIL_FROM_LEADS,
+    MAIL_FROM_NEWSLETTER,
+    escapeHtml,
+    getAdminEmail,
+    getSiteUrl,
+    sendMail,
+} from "@/lib/mail";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_12345"); // Fallback for local
+const NEWSLETTER_TOKEN_TTL_HOURS = 48;
 
 export async function submitLead(formData: FormData) {
-    const email = formData.get("email")?.toString();
+    // Honeypot: any value here means a bot filled the hidden field — silently succeed.
+    const honeypot = formData.get("website_url")?.toString();
+    if (honeypot) {
+        return { success: true, leadId: "spam-ignored" };
+    }
+
+    const email = formData.get("email")?.toString().trim();
     const vorname = formData.get("vorname")?.toString() || "";
     const nachname = formData.get("nachname")?.toString() || "";
     const telefon = formData.get("telefon")?.toString();
@@ -24,11 +38,12 @@ export async function submitLead(formData: FormData) {
     if (rechnerDatenRaw) {
         try {
             rechnerDaten = JSON.parse(rechnerDatenRaw);
-        } catch (e) { }
+        } catch {
+            // ignore malformed JSON; lead saves without payload
+        }
     }
 
     try {
-        // 1. Save to DB
         const lead = await prisma.lead.create({
             data: {
                 email,
@@ -39,47 +54,87 @@ export async function submitLead(formData: FormData) {
                 anzahlObjekte,
                 anbieterId,
                 newsletter,
-                rechnerDaten: rechnerDaten as any,
-                status: "neu"
-            }
+                rechnerDaten: rechnerDaten ?? undefined,
+                status: "neu",
+            },
         });
 
-        // 2. Send Email to Admin (Optional, handle missing key gracefully)
-        if (process.env.RESEND_API_KEY) {
-            await resend.emails.send({
-                from: "Leads <onboarding@resend.dev>",
-                to: [process.env.ADMIN_EMAIL || "admin@mieterstrom-check.de"],
-                subject: `Neuer Lead: ${vorname} ${nachname}`,
-                html: `
-          <h1>Neuer Mieterstrom-Lead</h1>
-          <p><strong>Name:</strong> ${vorname} ${nachname}</p>
-          <p><strong>E-Mail:</strong> ${email}</p>
-          <p><strong>Telefon:</strong> ${telefon || '-'}</p>
-          <p><strong>Firma:</strong> ${firma || '-'}</p>
-          <p><strong>Objekte/WE:</strong> ${anzahlObjekte || '-'}</p>
-          <p><strong>Newsletter Anfragen:</strong> ${newsletter ? 'Ja' : 'Nein'}</p>
-          ${anbieterId ? `<p><strong>Interessierter Anbieter:</strong> ID ${anbieterId}</p>` : ''}
-          ${rechnerDatenRaw ? `<h3>Rechner-Details:</h3><pre>${JSON.stringify(rechnerDaten, null, 2)}</pre>` : ''}
-        `
-            });
-        }
+        await sendMail({
+            from: MAIL_FROM_LEADS,
+            to: getAdminEmail(),
+            replyTo: email,
+            subject: `Neuer Lead: ${vorname} ${nachname}`.trim(),
+            html: `
+                <h1>Neuer Mieterstrom-Lead</h1>
+                <p><strong>Name:</strong> ${escapeHtml(`${vorname} ${nachname}`.trim())}</p>
+                <p><strong>E-Mail:</strong> ${escapeHtml(email)}</p>
+                <p><strong>Telefon:</strong> ${escapeHtml(telefon) || "-"}</p>
+                <p><strong>Firma:</strong> ${escapeHtml(firma) || "-"}</p>
+                <p><strong>Objekte/WE:</strong> ${escapeHtml(anzahlObjekte) || "-"}</p>
+                <p><strong>Newsletter:</strong> ${newsletter ? "Ja" : "Nein"}</p>
+                ${anbieterId ? `<p><strong>Interessierter Anbieter:</strong> ID ${escapeHtml(anbieterId)}</p>` : ""}
+                ${rechnerDatenRaw ? `<h3>Rechner-Details:</h3><pre>${escapeHtml(JSON.stringify(rechnerDaten, null, 2))}</pre>` : ""}
+            `,
+        });
 
-        // 3. Handle Newsletter integration
         if (newsletter) {
-            try {
-                await prisma.newsletterAbonnent.upsert({
-                    where: { email },
-                    update: {},
-                    create: { email, aktiv: true }
-                });
-            } catch (err) {
-                console.error("Newsletter saving error", err);
-            }
+            await startNewsletterDoubleOptIn(email);
         }
 
         return { success: true, leadId: lead.id };
     } catch (error) {
         console.error("Fehler beim Speichern des Leads:", error);
         return { error: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut." };
+    }
+}
+
+async function startNewsletterDoubleOptIn(email: string) {
+    try {
+        const existing = await prisma.newsletterAbonnent.findUnique({ where: { email } });
+        if (existing?.bestaetigt) {
+            return;
+        }
+
+        const token = randomBytes(32).toString("hex");
+        const tokenAblauf = new Date(Date.now() + NEWSLETTER_TOKEN_TTL_HOURS * 60 * 60 * 1000);
+
+        await prisma.newsletterAbonnent.upsert({
+            where: { email },
+            update: { bestaetigToken: token, tokenAblauf, aktiv: false },
+            create: {
+                email,
+                aktiv: false,
+                bestaetigt: false,
+                bestaetigToken: token,
+                tokenAblauf,
+            },
+        });
+
+        const confirmUrl = `${getSiteUrl()}/newsletter/bestaetigen?token=${token}`;
+
+        await sendMail({
+            from: MAIL_FROM_NEWSLETTER,
+            to: email,
+            subject: "Bitte bestätigen Sie Ihre Newsletter-Anmeldung",
+            html: `
+                <h1>Newsletter-Anmeldung bestätigen</h1>
+                <p>Vielen Dank für Ihr Interesse am Mieterstrom-Check Newsletter.</p>
+                <p>Bitte bestätigen Sie Ihre Anmeldung mit einem Klick:</p>
+                <p>
+                    <a href="${confirmUrl}" style="display:inline-block;padding:12px 24px;background:#16a34a;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;">
+                        Anmeldung bestätigen
+                    </a>
+                </p>
+                <p style="color:#64748b;font-size:13px;">
+                    Falls der Button nicht funktioniert, kopieren Sie diesen Link: <br/>
+                    <a href="${confirmUrl}">${confirmUrl}</a>
+                </p>
+                <p style="color:#64748b;font-size:13px;">
+                    Der Link ist ${NEWSLETTER_TOKEN_TTL_HOURS} Stunden gültig. Wenn Sie diese Anmeldung nicht angefordert haben, ignorieren Sie diese E-Mail.
+                </p>
+            `,
+        });
+    } catch (err) {
+        console.error("Newsletter Double-Opt-In Fehler:", err);
     }
 }

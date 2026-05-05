@@ -162,6 +162,14 @@ export function DownloadPdfModal({ rechnerDaten, className }: DownloadPdfModalPr
                             </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                            <input
+                                type="text"
+                                name="website_url"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                aria-hidden="true"
+                                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                            />
                             <div className="space-y-2">
                                 <label htmlFor="pdfEmail" className="text-sm font-medium">E-Mail Adresse *</label>
                                 <input id="pdfEmail" name="email" type="email" required className="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-green-500" placeholder="max@muster.de" />
