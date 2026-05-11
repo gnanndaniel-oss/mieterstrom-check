@@ -1,10 +1,27 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, Scale, Zap, Calculator, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLdString } from "@/lib/structured-data";
+
+export const metadata = pageMetadata({
+    title: "Mieterstrom-Guide 2026 | Recht, Förderung, Speicher | mieterstrom-check.de",
+    description:
+        "Der umfassende Leitfaden zu Mieterstrom & Gebäudeversorgung: Gesetze, Förderung, Speicher-Strategie und Modelle – fundiert erklärt.",
+    path: "/mieterstrom-guide",
+    keywords: ["Mieterstrom Guide", "Mieterstromgesetz", "Gebäudeversorgung", "BNetzA", "EEG 2023"],
+});
 
 export default function GuidePage() {
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Mieterstrom-Guide", path: "/mieterstrom-guide" },
+        ]),
+    );
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 py-16 text-white mb-12 border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-4xl text-center">
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">

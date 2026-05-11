@@ -1,10 +1,28 @@
 import Link from "next/link";
 import { ArrowLeft, Building2, CheckCircle2, AlertTriangle, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, jsonLdString } from "@/lib/structured-data";
+
+export const metadata = pageMetadata({
+    title: "Gebäudeversorgung (GGV) erklärt | Guide | mieterstrom-check.de",
+    description:
+        "Gemeinschaftliche Gebäudeversorgung (GGV) statt klassischem Mieterstrom: Wann lohnt sie sich, was unterscheidet sie vom §42a-Modell und welche rechtlichen Pflichten gibt es?",
+    path: "/mieterstrom-guide/gebaeudeversorgung",
+    keywords: ["GGV", "Gebäudeversorgung", "Solarpaket I", "§42b EnWG"],
+});
 
 export default function GuideGGVPage() {
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Mieterstrom-Guide", path: "/mieterstrom-guide" },
+            { name: "Gebäudeversorgung", path: "/mieterstrom-guide/gebaeudeversorgung" },
+        ]),
+    );
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 py-16 text-white border-b border-slate-800">
                 <div className="container mx-auto px-4 max-w-4xl pt-8">
                     <Link href="/mieterstrom-guide" className="inline-flex items-center text-slate-400 hover:text-white font-medium mb-8 text-sm transition-colors">

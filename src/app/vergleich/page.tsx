@@ -5,8 +5,18 @@ import { Button } from "@/components/ui/button";
 import { LeadModal } from "@/components/LeadModal";
 import { CompareWrapper } from "@/components/CompareWrapper";
 import { SortSelect } from "@/components/SortSelect";
+import { pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema, itemListSchema, jsonLdString } from "@/lib/structured-data";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata = pageMetadata({
+    title: "Mieterstrom-Anbieter Vergleich 2026 | mieterstrom-check.de",
+    description:
+        "Vergleichen Sie geprüfte Mieterstrom- und Gebäudeversorgungs-Anbieter in Deutschland. Filter nach Wohneinheiten, Leistungen, Region. Kostenlos & unabhängig.",
+    path: "/vergleich",
+    keywords: ["Mieterstrom Vergleich", "Mieterstrom Anbieter", "GGV Anbieter", "Gebäudeversorgung", "Photovoltaik Mehrfamilienhaus"],
+});
 
 export default async function VergleichPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const sp = await searchParams;
@@ -39,8 +49,20 @@ export default async function VergleichPage({ searchParams }: { searchParams: Pr
         orderBy
     });
 
+    const ld = jsonLdString(
+        breadcrumbSchema([
+            { name: "Start", path: "/" },
+            { name: "Vergleich", path: "/vergleich" },
+        ]),
+        itemListSchema(
+            anbieter.map((a) => ({ name: a.name, path: `/anbieter/${a.slug}` })),
+            "Mieterstrom- & Gebäudeversorgungs-Anbieter",
+        ),
+    );
+
     return (
         <div className="bg-slate-50 min-h-screen">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld }} />
             <div className="bg-slate-900 py-16 text-white mb-8 border-b border-slate-800">
                 <div className="container mx-auto px-4">
                     <h1 className="text-4xl font-bold mb-4">Mieterstrom-Anbieter im Vergleich</h1>
