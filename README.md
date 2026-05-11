@@ -55,6 +55,24 @@ Im Vercel-Projekt unter **Settings → Environment Variables** alle Werte aus `.
 - `MAIL_FROM_LEADS / _PARTNER / _NEWSLETTER`
 - `NEXT_PUBLIC_SITE_URL=https://mieterstrom-check.de` (sonst zeigt der Newsletter-Bestätigungslink auf localhost)
 
+## SEO / Schema.org / Geo
+
+- **Helper**: `src/lib/seo.ts` (`pageMetadata()`) und `src/lib/structured-data.ts` (BlogPosting, Service+AggregateRating, BreadcrumbList, ItemList, FAQ).
+- Jede Route exportiert `metadata` (statisch) oder `generateMetadata` (dynamisch). Client-Components (`/rechner`, `/partner`) tragen die Metadata über ein zusätzliches `layout.tsx`.
+- JSON-LD wird je Route als `<script type="application/ld+json">` ins HTML eingebettet (Anbieter: Service+Breadcrumb, Blog-Post: BlogPosting+Breadcrumb, Vergleich/Blog-Liste: ItemList+Breadcrumb, Guide-Pages: Breadcrumb).
+- **Sitemap** (`src/app/sitemap.ts`) ist dynamisch: zieht Anbieter & Blog-Posts aus Prisma + alle statischen Routen. `revalidate = 3600`.
+- **Geo**: `geo.region=DE`, `locale=de_DE` global. Anbieter-`regionen` werden zu `areaServed` im Service-Schema.
+
+Beim Hinzufügen neuer Routen:
+```ts
+import { pageMetadata } from "@/lib/seo";
+export const metadata = pageMetadata({ title, description, path: "/neue-route" });
+```
+
+Test-URLs:
+- Rich Results Test: https://search.google.com/test/rich-results
+- Schema-Validator: https://validator.schema.org/
+
 ## Datenmodell
 
 Siehe `prisma/schema.prisma`. Wichtigste Modelle: `Anbieter`, `Lead`, `KontaktAnfrage`, `NewsletterAbonnent`, `BlogPost`.
