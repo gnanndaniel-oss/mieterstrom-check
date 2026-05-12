@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://mieterstrom-check.de";
+export const SITE_URL = "https://www.mieterstrom-check.de";
 export const SITE_NAME = "mieterstrom-check.de";
 export const DEFAULT_OG_IMAGE = "/blog/mieterstrom_2026.png";
 
