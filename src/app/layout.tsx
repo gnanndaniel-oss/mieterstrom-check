@@ -12,12 +12,12 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mieterstrom-check.de'),
+  metadataBase: new URL('https://www.mieterstrom-check.de'),
   title: "Mieterstrom-Anbieter vergleichen 2026 | Kostenloser Vergleich | mieterstrom-check.de",
   description: "Finden Sie den passenden Mieterstrom-Dienstleister für Ihr Mehrfamilienhaus. Unabhängig. Kostenlos. BNetzA geprüft.",
   openGraph: {
     type: 'website',
-    url: 'https://mieterstrom-check.de',
+    url: 'https://www.mieterstrom-check.de',
     title: 'Das Vergleichsportal für Mieterstrom & GGV | mieterstrom-check.de',
     description: 'Finden Sie den perfekten Mieterstrom-Contracting Partner für Ihr Mehrfamilienhaus.',
     siteName: 'mieterstrom-check.de',
@@ -60,17 +60,17 @@ export default function RootLayout({
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Mieterstrom-Check",
-            "url": "https://mieterstrom-check.de",
+            "url": "https://www.mieterstrom-check.de",
             "potentialAction": {
               "@type": "SearchAction",
-              "target": "https://mieterstrom-check.de/vergleich?we={search_term_string}",
+              "target": "https://www.mieterstrom-check.de/vergleich?we={search_term_string}",
               "query-input": "required name=search_term_string"
             }
           }, {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "Gnann Verwaltung GmbH",
-            "url": "https://mieterstrom-check.de",
+            "url": "https://www.mieterstrom-check.de",
             "contactPoint": {
               "@type": "ContactPoint",
               "telephone": "+49-821-419028-40",
